@@ -1,0 +1,113 @@
+#$(wildcard *.f90): Makefile
+#$(wildcard *.f90): $(wildcard *.h)
+all: $(BINTARGET)
+%.kap.f90: %.f90 Makefile
+	$(KF90) $< -cmp > $@
+%.kap.f: %.f Makefile
+	$(KF90) $< -cmp > $@
+#旧いソースは-u(implicit none)を指定しない
+%.o: %.f # Makefile
+	$(FC) $(F90FLAGS) $(F90CPPFLAGS) -c $<
+#%.f: %.f90
+#	$(HOME)/work/Linux/VASTF90/vf90 -o $@ $<
+%.f90: $(wildcard *.h)
+%.sf.f90: %.F90
+	$(CPP) -P $(F90CPPFLAGS) -DSHOWFORCE $< > $@
+%: %.o Rigid0.o mtrnd.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+
+test_qlmcache: test_qlmcache.o qlmcache.o dict.o element.o dlist.o q6f.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ $(LDFLAGS)
+test_graph: Graph.o RandomModule.o mtrnd.o test_graph.o CommonModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ $(LDFLAGS)
+test_random: RandomModule.o mtrnd.o test_random.o Error.o CommonModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ $(LDFLAGS)
+
+FakeMPIFtest: FakeMPIFtest.o FakeMPIF.o FakeMPI.o Timer.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+morph: morph.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+OBJ_RIGID=RigidModule.o EPM2CO2Module.o SPCEModule.o FlatFallerTHFModule.o SSPKMethaneModule.o CJTHFModule.o ST2Module.o TIP4PConst.o NvdEModule.o RigidMorph.o SJBenzene.o RigidSetup.o Dumbbell.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o PiWater.o
+
+mc2: mc2.o RigidModule.o SiteModule.o MolModule.o StdInteraction.o BoxModule.o CutoffModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o CommonModule.o PhysConst.o VectorModule.o QuatModule.o RandomModule.o mtrnd.o Monitor.o InteractionModule.o Error.o PairInfo.o MatrixModule.o Interaction2.o ST2Module.o NvdEModule.o SWSilicon.o SJBenzene.o Triplet.o Neighbor.o Tetrahedrality.o GridModule.o BookModule.o Stack.o DistribModule.o Set.o mc2util.o  FakeMPIF.o FakeMPI.o Timer.o Triangle.o Umbrella.o Q6Local.o Graph.o Replica.o om.o NvdEModule.o \
+q6.o #q6cache.o q6f.o qlmcache.o dict.o element.o dlist.o #q6.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ $(LDFLAGS)
+
+Mixture: Umbrella.o Timer.o FakeMPIF.o FakeMPI.o Graph.o Replica.o MDReplica.o VectorModule.o CommonModule.o Monitor.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o InteractionModule.o GridModule.o BookModule.o Mixture.o mtrnd.o StdInteraction.o Argon.o FlexModule.o ExternalModule.o MatrixModule.o RattleModule.o Stack.o Interaction2.o Error.o SWSilicon.o FlexSetup.o Triplet.o $(OBJ_RIGID)
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+traj2: MatrixModule.o VectorModule.o CommonModule.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o TimeModule.o SiteModule.o BoxModule.o MolModule.o InteractionModule.o GridModule.o BookModule.o traj2.o mtrnd.o traj2main.o StdInteraction.o Monitor.o FlexModule.o Argon.o DistribModule.o RDFModule.o Interaction2.o Error.o SWSilicon.o FlexSetup.o Triplet.o RattleModule.o $(OBJ_RIGID) Neighbor.o Tetrahedrality.o Neighbor.o Set.o Q6Local.o q6.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+surface: MatrixModule.o VectorModule.o CommonModule.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o TimeModule.o SiteModule.o BoxModule.o MolModule.o InteractionModule.o GridModule.o BookModule.o surface.o mtrnd.o StdInteraction.o Monitor.o FlexModule.o Argon.o RattleModule.o DistribModule.o RDFModule.o Error.o FlexSetup.o Set.o SWSilicon.o Triplet.o $(OBJ_RIGID)
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+traj2mdview: traj2mdview.o VectorModule.o CommonModule.o PhysConst.o QuatModule.o RandomModule.o SiteModule.o BoxModule.o MolModule.o StdInteraction.o Argon.o FlexModule.o ExternalModule.o MatrixModule.o mtrnd.o RandomModule.o Monitor.o RattleModule.o InteractionModule.o GridModule.o $(OBJ_RIGID)
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+MixtureQuench: FlexModule.o VectorModule.o CommonModule.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o InteractionModule.o GridModule.o BookModule.o QuenchModule.o MixtureQuench.o mtrnd.o StdInteraction.o MatrixModule.o Argon.o RattleModule.o Interaction2.o Error.o SWSilicon.o Triplet.o $(OBJ_RIGID)
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+
+
+
+
+
+
+
+
+
+
+
+#
+#-------------------OBSOLETE-------------------------------------------------
+#
+test_vector: VectorModule.o PhysConst.o test_vector.o MatrixModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+test_thf: VectorModule.o PhysConst.o test_thf.o MatrixModule.o RigidModule.o THF.o RandomModule.o StdInteraction.o mtrnd.o BoxModule.o MolModule.o QuatModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+test_rdf: VectorModule.o PhysConst.o test_rdf.o InteractionModule.o BoxModule.o DistribModule.o MatrixModule.o GridModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+NeatRigid2: VectorModule.o CommonModule.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o GridModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o BookModule.o NeatRigid2.o mtrnd.o StdInteraction.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+NeatRigidQuench: VectorModule.o CommonModule.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o GridModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o BookModule.o QuenchModule.o NeatRigidQuench.o mtrnd.o StdInteraction.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+NeatRigidQuench.4096rc8: VectorModule.o CommonModule4096rc8.o QuatModule.o PhysConst.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o GridModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o BookModule.o QuenchModule.o NeatRigidQuench.o mtrnd.o StdInteraction.o 
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+MeOHWater: VectorModule.o CommonModule.o QuatModule.o PhysConst.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o GridModule.o TIP4PModule.o OPLSMeOHModule.o BookModule.o MeOHWater.o mtrnd.o StdInteraction.o 
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+MeOHWaterSmall: VectorModule.o CommonModule.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o TIP4PModule.o OPLSMeOHModule.o MeOHWaterSmall.o mtrnd.o StdInteraction.o 
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+coulomb: coulomb.o
+	$(F90LD) $(F90LDFLAGS) ../mdgrape/current/fortran_lib.o $^ -o $@ -L../mdgrape/current -lm2
+#	$(F90LD) $(F90LDFLAGS) ../mdgrape/current/host/fortran_lib.o $^ -o $@ -L../mdgrape/current/host -lm2
+Mixture_test: VectorModule.o CommonModule.o Monitor.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o GridModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o BookModule.o Mixture_test.o mdgrape.o mtrnd.o StdInteraction.o Argon.o FlexModule.o TIP4PConst.o
+	$(F90LD) $(F90LDFLAGS) ../mdgrape/current/fortran_lib.o $^ -o $@ -L../mdgrape/current -lm2
+#	$(F90LD) $(F90LDFLAGS) ../mdgrape/current/host/fortran_lib.o $^ -o $@ -L../mdgrape/current/host -lm2
+Mixture.kap: VectorModule.kap.o CommonModule.kap.o Monitor.kap.o PhysConst.kap.o QuatModule.kap.o RandomModule.kap.o CutoffModule.kap.o NoseModule.kap.o AverageModule.kap.o TimeModule.kap.o SiteModule.kap.o BoxModule.kap.o ExternalModule.kap.o AndersenModule.kap.o MolModule.kap.o RigidModule.kap.o InteractionModule.kap.o GridModule.kap.o TIP4PModule.kap.o TIP5PModule.kap.o OPLSMeOHModule.kap.o BookModule.kap.o Mixture.kap.o mtrnd.kap.o StdInteraction.kap.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+MixtureTest: VectorModule.o CommonModule.o Monitor.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o GridModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o BookModule.o MixtureTest.o mtrnd.o StdInteraction.o InteractionModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+Mixture.4096rc8: VectorModule.o CommonModule4096rc8.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o GridModule.o TIP4PModule.o OPLSMeOHModule.o BookModule.o Mixture.o mtrnd.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+MixtureQuench.4096rc8: VectorModule.o CommonModule4096rc8.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o GridModule.o TIP5PModule.o TIP4PModule.o OPLSMeOHModule.o BookModule.o QuenchModule.o MixtureQuench.o mtrnd.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+MixtureSmall: VectorModule.o CommonModule.o PhysConst.o QuatModule.o RandomModule.o CutoffModule.o NoseModule.o AverageModule.o TimeModule.o SiteModule.o BoxModule.o ExternalModule.o AndersenModule.o MolModule.o RigidModule.o InteractionModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o MixtureSmall.o mtrnd.o Monitor.o StdInteraction.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+mdview2nx4a: mdview2nx4a.o Restruct.o VectorModule.o MatrixModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@
+mctest: mctest.o RigidModule.o SiteModule.o MolModule.o StdInteraction.o BoxModule.o CutoffModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o CommonModule.o PhysConst.o VectorModule.o QuatModule.o RandomModule.o mtrnd.o Monitor.o InteractionModule.o Error.o PairInfo.o MatrixModule.o Interaction2.o ST2Module.o NvdEModule.o SWSilicon.o SJBenzene.o Triplet.o Neighbor.o Tetrahedrality.o GridModule.o BookModule.o Stack.o q6f.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+
+MC_HBR: MC_HBR.o MolModule.o RigidModule.o SiteModule.o MolModule.o StdInteraction.o BoxModule.o CutoffModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o CommonModule.o PhysConst.o MonteCarloModule.o VectorModule.o QuatModule.o RandomModule.o mtrnd.o Monitor.o InteractionModule.o GraphModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+Test: Test.o RandomModule.o mtrnd.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+Test2: Test2.o RandomModule.o mtrnd.o GraphModule.o
+	$(F90LD) $(F90LDFLAGS) $^ -o $@ 
+test2: Test2
+	iceIc -t nx4a 1234 4 0.92 | traj2ngph.pl > @test2
+	Test2 < @test2
+
+clean::
+	-rm -f *.o *.f90 *~ ifc* work* *.d fort.* *.mod $(BINTARGET)
+ifeq "$(OSTYPE)" "linux"
+	cp Makefile Makefile.org
+	sed -n 1,/^LAST:/p Makefile.org > Makefile
+endif
+

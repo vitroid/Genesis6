@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+
+use strict;
+
+my %user;
+my %provider;
+
+while ( 1 ) {
+    my $file = shift || last;
+    my $object = $file;
+    $object =~ s/f90$/o/i;
+    #print "Open $file\n";
+    open(FILE,"<$file");
+    while (<FILE>){
+	if ( /^\s*module\s+([^\s]+)/i ){
+	    $_ = $1;
+	    if ( $_ !~ /procedure/i ){
+		tr/A-Z/a-z/;
+		#print STDERR "$file provides module $_\n";
+		push(@{$provider{$_}},$object);
+	    }
+	}elsif ( /^\s*use\s+([^\s]+)/i ){
+	    $_ = $1;
+	    #print STDERR "$file uses $_\n";
+	    $user{$object}{$_}++;
+	}
+    }
+    close(FILE);
+}
+
+
+#
+#Remove old dependencies
+#
+print "# DO NOT DELETE\n\n";
+
+foreach my $object ( keys %user ){
+    print $object,": ";
+    foreach my $use ( keys %{$user{$object}} ){
+	if ( defined $provider{$use} ){
+	    print join(" ",@{$provider{$use}})," ";
+	}
+    }
+    print "\n";
+}
+
+exit 0;

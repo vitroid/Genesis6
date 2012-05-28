@@ -1,0 +1,13 @@
+*.o
+*~
+*.mod
+.DS_Store
+
+
+#executables
+morph
+Mixture
+MixtureQuench
+traj2
+mc2
+surface

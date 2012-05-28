@@ -1,0 +1,40 @@
+#########################################################################
+#   linux (eau)
+#########################################################################
+#IFC     = /opt/intel/compiler70/ia32/bin/ifc
+IFC     = ifort
+#平成17年3月24日(木)mc2はifortのほうが速いようだ。
+
+#IFC     = /usr/lib/mpich-mpd/bin/mpif90
+#IFC     = /usr/lib/mpich/bin/mpif90
+#CC	=mpicc.mpich
+#IFC     = /usr/local/mpich/bin/mpif90
+#IFC     = /usr/lib/lam/bin/mpif77.lam
+#CC	=mpicc.lam
+FC	=$(IFC)
+F90	=$(IFC)
+F90LD	=$(IFC)
+ICC=icc
+#CC	=$(ICC)
+CFLAGS  = -pg -g -O2 `gtk-config --cflags`
+LDFLAGS=-lglib -lm
+
+KF90	=/usr/local/matto/bin/on e1 kapf90 -inline -tune=ev6 -arch=ev6 
+F90CPPFLAGS	=-DSTDERR=0 $(COMMONCPPFLAGS)
+#
+#ifort -O3だとmc2は誤動作する。
+#
+F90FLAGS	= -Zp16 -tpp7 -O2 -xW #  -g #-qp #  -C -d4 -g #-tpp7 -qp #-p #-qp #-g
+#F90FLAGS	= -C -d4 -g # -qp #for debug
+FFLAGS		= $(F90FLAGS)
+# -qp: gprof profile
+# -p : prof profile
+F90LDFLAGS	= -static $(F90FLAGS) -pthread -Vaxlib #for ifc7
+%.o: %.F90
+	$(FC) $(F90FLAGS) $(F90CPPFLAGS) -c $<
+# - UmbrellaSampling (for mc2)
+%.o: %.F
+	$(FC) $(FFLAGS) $(F90CPPFLAGS) -c $<
+%.s: %.F90 #Makefile
+	$(FC) $(F90FLAGS) -S $<
+

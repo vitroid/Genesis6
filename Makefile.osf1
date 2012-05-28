@@ -1,0 +1,34 @@
+#########################################################################
+#   OSF1 (e1)
+#########################################################################
+
+
+
+# -N3 include record length for unformatted data
+#F90FLAGS	= -ffree -g
+#for DEC
+#	-align rec8byte		align members in type to 8byte boundary
+#	-fpconstant		Consider floating constants as double.
+#F90DEPFLAGS	= #-W132
+
+FC	=f90
+F90	=f90
+F90LD	=f90
+#for e1
+#KF90	=/usr/local/matto/bin/on e1 kapf90 -inline -tune=ev6 -arch=ev6 
+KF90	=kapf90 -inline -tune=ev6 -arch=ev6 
+F90CPPFLAGS	=-DSTDERR=0 $(COMMONCPPFLAGS)
+F90FLAGS	= -align dcommons -align sequence -align rec8byte +call_shared -warn unused -O3 -v -arch=ev6 -tune=ev6 -fkapargs='-tune=ev6 -arch=ev6 -inline ' -math_library accurate -fpconstant -p 
+##-g #-p#-nof90kap#-g #-C -p#-mp -g#-inline_optimize=3 #-g -G#+O2 -G
+#-pをつけてもさほど速度が変わらないので常時付けておく。
+#osf1では、リンク時オプションを選別しないと、上のF90FLAGSをそのまま与えたのでは動かない。
+F90LDFLAGS	= -non_shared -O5 -v -math_library accurate -fpconstant -p
+%.f90: %.F90
+	-rm -f $@
+	$(CPP) -P $(F90CPPFLAGS) $< > $@
+	chmod a-w $@
+%.s: %.f90 #Makefile
+	$(FC) $(F90FLAGS) -S $<
+%.o: %.f90 #Makefile
+	$(FC) $(F90FLAGS) -c $<
+

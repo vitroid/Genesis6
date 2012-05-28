@@ -1,0 +1,43 @@
+#@FAST
+#1
+@MCLP ... ループ回数
+1000
+@RCOA ...cutoff length
+6.0 2.0
+@NLOG
+10
+@SNPO
+1000
+@TEMP .. thermostat temperature setting for MC
+230
+@HIST
+21 0.100000000000000 -1.00000000000000
+2.18
+20.292
+65.672
+138.316
+245.649
+374.39
+478.799
+515.596
+465.066
+355.355
+226.949
+117.862
+46.259
+13.03
+3.083
+1.329
+1.811
+0.359
+0.003
+0
+0
+@MPIN ... mpi nodes and input file names
+2
+mc2input0000.0
+mc2input0000.1
+mc2input0000.2
+mc2input0000.3
+mc2input0000.4
+mc2input0000.5
