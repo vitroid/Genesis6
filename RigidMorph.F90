@@ -1,5 +1,5 @@
 !
-!���빽¤�����̤ι�¤��Ϣ³�ѷ������롣
+!ある構造から別の構造へ連続変形させる。
 !
 module rigidmorph_module
   use rigid_module
@@ -9,7 +9,7 @@ module rigidmorph_module
      integer      :: mode
      integer      :: nmol
      type(sRigid) :: initial, final
-     !�ƥ����Ȥ��Ѱ̥٥��ȥ�
+     !各サイトの変位ベクトル
      real(kind=8) :: tx(1000), ty(1000), tz(1000)
   end type srigidmorph
 
@@ -55,12 +55,12 @@ contains
   end subroutine RigidMorph_Interpolate
 
   !
-  !mix�������Ѳ����������γ���ߺ��������Ѱ̤�Ͽ���Ƥ�����
-  !��ͳ���ͥ륮���׻���®���Ǥ��뤫�⤷��ʤ���ʿ��16ǯ8��19��(��)
-  !�����Ϥ����ä���ʬ����Ф�ä�®���Ǥ��뤬���ޤ��ϼ¾ڼ¸��Ȥ������Ȥ�
-  !��ʬ�ǽ񤯡�(���ʤ���˽)
+  !mixを微小変化させた時の各相互作用点の変位を記録しておく。
+  !自由エネルギー計算を速くできるかもしれない。平成16年8月19日(木)
+  !本当はきちっと微分すればもっと速くできるが、まずは実証実験ということで
+  !差分で書く。(かなり乱暴)
   !
-  !ʿ��16ǯ8��19��(��)�ʤ�Ȥ������� 
+  !平成16年8月19日(木)なんとか完成。 
   !
   subroutine RigidMorph_SetTangentVectors0( rigidmorph, ratio, rigid, mol, site )
     use quat_module
@@ -106,8 +106,8 @@ contains
   end subroutine RigidMorph_SetTangentVectors0
   
   !
-  !��ꥹ�ޡ��Ȥʼ��Ƿ׻����롣
-  !ʿ��16ǯ8��20��(��)�ɤ����Ƥ⤦�ޤ��׻��Ǥ��ʤ����͸��Ҥ��鼴���������ˡ�򡢲������㤤���Ƥ���Τ��������������֤���ä����ʤ��Τǡ����̾�μ�ˡ��Ȥ����Ȥˤ��롣
+  !よりスマートな手順で計算する。
+  !平成16年8月20日(金)どうしてもうまく計算できない。四元子から軸を割りだす方法を、何か勘違いしているのだろうか？？時間がもったいないので、当面上の手法を使うことにする。
   !
   subroutine RigidMorph_SetTangentVectors( rigidmorph, rigid, mol )
     use quat_module
@@ -131,7 +131,7 @@ contains
        d1 = rigidmorph%final%mol(i)%quat(1)%vec(4)
        call qadd( a1,b1,c1,d1, a0,-b0,-c0,-d0 )
        ! 
-       !��ž���򡢼������ȳ��٤�ʬ�䤹�롣
+       !回転操作を、軸方向と角度に分割する。
        !
        d = sqrt( b1**2 + c1**2 + d1**2 )
        if ( d .le. 0d0 ) then
@@ -146,8 +146,8 @@ contains
           n3 =-b1 / d * phi
           !write(STDERR,*) "phi:", phi, n1,n2,n3,b1,c1,d1
           !
-          !ʿ��16ǯ8��20��(��)
-          !���󤶤��ϫ������̡���Τ褦���б�����ǧ���줿��
+          !平成16年8月20日(金)
+          !さんざん苦労した結果、上のような対応が確認された。
           !
        endif
        do j=1, mol%nsite
@@ -167,7 +167,7 @@ contains
           rigidmorph%ty(k) = rigidmorph%ty(k) + rigidmorph%final%mol(i)%com%vec(2) - rigidmorph%initial%mol(i)%com%vec(2)
           rigidmorph%tz(k) = rigidmorph%tz(k) + rigidmorph%final%mol(i)%com%vec(3) - rigidmorph%initial%mol(i)%com%vec(3)
           !
-          !�¿ʤΤۤ�������ʤ���
+          !並進のほうは問題なし。
           !
           !rigidmorph%tx(k) = rigidmorph%final%mol(i)%com%vec(1) - rigidmorph%initial%mol(i)%com%vec(1)
           !rigidmorph%ty(k) = rigidmorph%final%mol(i)%com%vec(2) - rigidmorph%initial%mol(i)%com%vec(2)

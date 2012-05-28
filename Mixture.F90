@@ -1,23 +1,27 @@
 ! -*- f90 -*-
 
-!1À®Ê¬(input512.snoda)¡¢Ç½Àª¤¢¤ê¡¢OK Ê¿À®14Ç¯12·î10Æü(²Ğ)
+!1æˆåˆ†(input512.snoda)ã€èƒ½å‹¢ã‚ã‚Šã€OK å¹³æˆ14å¹´12æœˆ10æ—¥(ç«)
 
 !
-!Rigid¤ÊÊ¬»Ò¤Îº®¹ç·ÏÈÆÍÑ¡£¤â¤Á¤í¤óNeat¤Ê·Ï¤Ç¤â»È¤¨¤ë¡£
+!Rigidãªåˆ†å­ã®æ··åˆç³»æ±ç”¨ã€‚ã‚‚ã¡ã‚ã‚“Neatãªç³»ã§ã‚‚ä½¿ãˆã‚‹ã€‚
 !
 !ToDo
 !Feedback temperature from replica exchange
 !Final data in binary
 !
 !
-!Ê¿À®15Ç¯9·î30Æü(²Ğ)
-!  isRigid¤Î¼ş¤ê¤Î½èÍı¤¬¡¢flexÊ¬»Ò¤Ç¤â¤Á¤ã¤ó¤ÈÆ°¤¯¤«¤É¤¦¤«¡£
-!  flex molecule¤Î¥«¥Ã¥È¥ª¥Õ¤Î¼ïÊÌ
-!     ÆÃÄê¥µ¥¤¥È¤ò´ğ½à¤È¤¹¤ë¥«¥Ã¥È¥ª¥Õ
-!     ¥µ¥¤¥È·²¤Î½Å¿´¤ò´ğ½à¤È¤¹¤ë¥«¥Ã¥È¥ª¥Õ
-!        ½Å¿´¤ò¥«¥Ã¥È¥ª¥Õ¤Î´ğ½àÅÀ¤È¤¹¤ë¤Ê¤é¡¢±¿Æ°ÊıÄø¼°¤ÎÊÑ¹¹¤¬É¬Í×¤Ç¤Ï¡©
+!å¹³æˆ15å¹´9æœˆ30æ—¥(ç«)
+!  isRigidã®å‘¨ã‚Šã®å‡¦ç†ãŒã€flexåˆ†å­ã§ã‚‚ã¡ã‚ƒã‚“ã¨å‹•ãã‹ã©ã†ã‹ã€‚
+!  flex moleculeã®ã‚«ãƒƒãƒˆã‚ªãƒ•ã®ç¨®åˆ¥
+!     ç‰¹å®šã‚µã‚¤ãƒˆã‚’åŸºæº–ã¨ã™ã‚‹ã‚«ãƒƒãƒˆã‚ªãƒ•
+!     ã‚µã‚¤ãƒˆç¾¤ã®é‡å¿ƒã‚’åŸºæº–ã¨ã™ã‚‹ã‚«ãƒƒãƒˆã‚ªãƒ•
+!        é‡å¿ƒã‚’ã‚«ãƒƒãƒˆã‚ªãƒ•ã®åŸºæº–ç‚¹ã¨ã™ã‚‹ãªã‚‰ã€é‹å‹•æ–¹ç¨‹å¼ã®å¤‰æ›´ãŒå¿…è¦ã§ã¯ï¼Ÿ
 
-#define USE_REPLICA
+
+!it should work, but removed by matto 2012-5-28
+!#define USE_REPLICA
+!It fails to compile on gfortran.
+!#define JARSYNSKI
 
 program main
   use common_module
@@ -46,7 +50,10 @@ program main
 #ifdef RATTLE
   use rattle_module
 #endif
-  use rigidmorph_module
+#ifdef JARZYNSKI
+  !inactivated 2012-5-28
+  !use rigidmorph_module
+#endif
   use stack_module
   use rigid_setup_module
   use flex_setup_module
@@ -67,11 +74,11 @@ program main
   type(sFlex) :: flex( MAXCOMPO )
   type(sMol) :: mol( MAXCOMPO )
   type(sInteraction) :: ww(MAXCOMBI)
-  type(sBind) :: bind( MAXCOMBI )   ! ¿åÆ±»Î¤ò¤æ¤ë¤¯·ë¤Ó¤Ä¤±¡¢¥¯¥é¥¹¥¿¤¬²õ¤ì¤Ê¤¤¤è¤¦¤Ë¤¹¤ë¡£
-  type(sBind) :: jmon( MAXCOMBI )  ! ¼«Í³¥¨¥Í¥ë¥®¡¼·×»»ÍÑ¤Ë¡¢ÊÌ¤Î¥Ñ¥é¥á¡¼¥¿¤Ç¤â·×»»¤¹¤ë¡£
+  type(sBind) :: bind( MAXCOMBI )   ! æ°´åŒå£«ã‚’ã‚†ã‚‹ãçµã³ã¤ã‘ã€ã‚¯ãƒ©ã‚¹ã‚¿ãŒå£Šã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹ã€‚
+  type(sBind) :: jmon( MAXCOMBI )  ! è‡ªç”±ã‚¨ãƒãƒ«ã‚®ãƒ¼è¨ˆç®—ç”¨ã«ã€åˆ¥ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã§ã‚‚è¨ˆç®—ã™ã‚‹ã€‚
 #ifdef SOLVATIONTEST
   !
-  !¿åÁÇ·ë¹ç¤ò¸ÇÄê¤¹¤ë¡£¿å¤ËÆÃ²½¤·¤¿¡£
+  !æ°´ç´ çµåˆã‚’å›ºå®šã™ã‚‹ã€‚æ°´ã«ç‰¹åŒ–ã—ãŸã€‚
   !
   type(sJointHB) :: joint( MAXCOMBI )
   real(kind=8), allocatable :: ep1sol(:)
@@ -100,7 +107,7 @@ program main
 #endif
   type(sTensor) :: virialp( MAXCOMBI )
   type(sTensor) :: virialk( MAXCOMPO )
-  !°µÎÏ¥Æ¥ó¥½¥ë¤Î±¿Æ°ÎÌÀ®Ê¬¤È¥İ¥Æ¥ó¥·¥ã¥ëÀ®Ê¬¡£See JPCB 104, 1332(2000)
+  !åœ§åŠ›ãƒ†ãƒ³ã‚½ãƒ«ã®é‹å‹•é‡æˆåˆ†ã¨ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«æˆåˆ†ã€‚See JPCB 104, 1332(2000)
   type(sTensor) :: vpk, vpp
 #ifdef DEBUG
   real(kind=8)  :: virialpsum, virialksum
@@ -110,19 +117,19 @@ program main
   !
   type(sTensor) :: vp
   !
-  !Ê¬»Ò´ÖÁê¸ßºîÍÑ¤ËÈæÎã·¸¿ô¤ò³İ¤±¤ë
+  !åˆ†å­é–“ç›¸äº’ä½œç”¨ã«æ¯”ä¾‹ä¿‚æ•°ã‚’æ›ã‘ã‚‹
   !
   real(kind=8) :: ivscale( MAXCOMPO, MAXCOMPO ), value
   real(kind=8) :: ScaleSWSI
   !
-  !Ê¬»Ò¤òÆÃÄêºÂÉ¸¤Ë¥Ğ¥Í¤Ç¤Ä¤Ê¤°¡£
+  !åˆ†å­ã‚’ç‰¹å®šåº§æ¨™ã«ãƒãƒã§ã¤ãªãã€‚
   !
   type(sTie)  :: tie(MAXCOMPO)
   integer     :: ntie
   real(kind=8) :: exsum,etie
   logical      :: ftie  !dummy
   !
-  !¶¦ÄÌ¥Ğ¥ÍÄê¿ô
+  !å…±é€šãƒãƒå®šæ•°
   !
   real(kind=8) :: tiea
   integer      :: tieb
@@ -132,28 +139,28 @@ program main
   !
   integer     :: MNOMIAC
   !
-  !Âè0¥¹¥Æ¥Ã¥×¤Ç¤Î²¹ÅÙ¤Î¶¯À©ÀßÄê(ºÂÉ¸¤À¤±¤¢¤¿¤¨¤Æ¡¢Â®ÅÙ¤ò¥é¥ó¥À¥à¤Ë¤·
-  !¤¿¤¤¾ì¹ç)
+  !ç¬¬0ã‚¹ãƒ†ãƒƒãƒ—ã§ã®æ¸©åº¦ã®å¼·åˆ¶è¨­å®š(åº§æ¨™ã ã‘ã‚ãŸãˆã¦ã€é€Ÿåº¦ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«ã—
+  !ãŸã„å ´åˆ)
   !
   real(kind=8) :: settemp
   integer      :: seed
   !
-  !·ÏÁ´ÂÎ¤Î²óÅ¾¤ÎÍŞ»ß¤ÎÉÑÅÙ(¥¯¥é¥¹¥¿¤Î¾ì¹ç¤ËÉ¬¿Ü)
+  !ç³»å…¨ä½“ã®å›è»¢ã®æŠ‘æ­¢ã®é »åº¦(ã‚¯ãƒ©ã‚¹ã‚¿ã®å ´åˆã«å¿…é ˆ)
   !
   integer      :: stoprotation
   type(vector3) :: moment,totalmoment,omega
   real(kind=8)  :: tensor(3,3),totaltensor(3,3)
   !
-  !·ÏÁ´ÂÎ¤ÎÊÂ¿Ê¤ÎÍŞ»ß¤ÎÉÑÅÙ(¥¯¥é¥¹¥¿¤Î¾ì¹ç¤ËÉ¬¿Ü)
+  !ç³»å…¨ä½“ã®ä¸¦é€²ã®æŠ‘æ­¢ã®é »åº¦(ã‚¯ãƒ©ã‚¹ã‚¿ã®å ´åˆã«å¿…é ˆ)
   !
   integer      :: stopdrift
   !
-  !½Å¿´¤òºÂÉ¸¸¶ÅÀ¤Ë
+  !é‡å¿ƒã‚’åº§æ¨™åŸç‚¹ã«
   !
   integer      :: shifttoorigin
   real(kind=8) :: totalmass,mass
   !
-  !½ÀÆğÊ¬»Ò¤Î¼ÁÅÀ¤Î¼ÁÎÌ
+  !æŸ”è»Ÿåˆ†å­ã®è³ªç‚¹ã®è³ªé‡
   !
   real(kind=8) :: molmass(MAXSITE)
 #ifdef MEMUSAGE
@@ -163,11 +170,11 @@ program main
   integer :: ptensor
   integer :: pair
   !
-  !Ê¬»Ò¤ò½é´üºÂÉ¸¤Î¤Ş¤Ş¸ÇÄê¡£Ä¾¸å¤ËÆÉ¤ß¤³¤àºÂÉ¸¤Ë¤Î¤ßÍ­¸ú¡£·ÑÂ³¥Ç¡¼¥¿¤Ë´Ş¤Ş¤ì¤ë¡£
+  !åˆ†å­ã‚’åˆæœŸåº§æ¨™ã®ã¾ã¾å›ºå®šã€‚ç›´å¾Œã«èª­ã¿ã“ã‚€åº§æ¨™ã«ã®ã¿æœ‰åŠ¹ã€‚ç¶™ç¶šãƒ‡ãƒ¼ã‚¿ã«å«ã¾ã‚Œã‚‹ã€‚
   !
   logical :: isFixed
   !
-  !@NCMP¤ÇÌÀ¼¨Åª¤Ë»ØÄê¤µ¤ì¤ëÀ®Ê¬¿ô
+  !@NCMPã§æ˜ç¤ºçš„ã«æŒ‡å®šã•ã‚Œã‚‹æˆåˆ†æ•°
   !
   integer :: incompo
   real(kind=8) :: ekt(MAXCOMPO),ekr(MAXCOMPO),eksum,temperature,ektsum,ekrsum
@@ -186,48 +193,49 @@ program main
   integer :: iVcnt
   real(kind=8)  :: vcnt
   !
-  !À®Ê¬¤Î¿ô(¤È¤ê¤¢¤¨¤º¾å¸Â¤Ï2)
+  !æˆåˆ†ã®æ•°(ã¨ã‚Šã‚ãˆãšä¸Šé™ã¯2)
   !
   integer      :: ncompo
   !
-  !ÁÈ¤ß¹ç¤ï¤»¤Î¿ô
+  !çµ„ã¿åˆã‚ã›ã®æ•°
   !
   integer      :: ncombi
   !type(vector4),dimension(MAXMOL) :: quat
   !type(vector3),dimension(MAXMOL) :: force
   type(vector3) :: com( MAXMOL, MAXCOMPO )
   !
-  !³°¾ì¤Ë¤è¤Ã¤Æ½Å¿´¤Ë²Ã¤ï¤ëÎÏ
+  !å¤–å ´ã«ã‚ˆã£ã¦é‡å¿ƒã«åŠ ã‚ã‚‹åŠ›
   !
   type(vector3) :: fcom(MAXMOL)
   !
-  !Ê¬»ÒÂĞ¤ò·ë¤Ó¤Ä¤±¤ë¡£
+  !åˆ†å­å¯¾ã‚’çµã³ã¤ã‘ã‚‹ã€‚
   !
   logical :: press, stretch
   integer :: ii,jj
   real(kind=8) :: ebind, ejmon, emonsum
   !
-  !ÂÎÀÑ¤òºÆÀßÄê¤¹¤ë¡£
+  !ä½“ç©ã‚’å†è¨­å®šã™ã‚‹ã€‚
   !
   real(kind=8) :: vscale
   !
-  !Ê¬»Ò¿ô¡£°ì»şÊÑ¿ô
+  !åˆ†å­æ•°ã€‚ä¸€æ™‚å¤‰æ•°
   !
   integer :: nmol
 #ifdef RATTLE
   !
-  !RattleÆâÉô¤Ç¤Î¥µ¥¤¥ÈÈÖ¹æ
+  !Rattleå†…éƒ¨ã§ã®ã‚µã‚¤ãƒˆç•ªå·
   !
   integer :: rsite
 #endif
   !
-  !Jarzynski¤Ë¤è¤ë¼«Í³¥¨¥Í¥ë¥®¡¼·×»»¤Î¤¿¤á¤Î¡¢Morphing
-  !ÆâÉô¤Ç¤Î¤È¤ê¤¢¤Ä¤«¤¤¤ÏFIXC¤ÈÆ±°ì¤Ë¤¹¤ë¡£
-  !¤È¤ê¤¢¤¨¤ºÃ±°ìÀ®Ê¬¤Î¤ßmorph¤Ç¤­¤ë¤â¤Î¤È¤¹¤ë¡£
+  integer             :: morphcompo = 0
+#ifdef JARZYNSKI
+  !Jarzynskiã«ã‚ˆã‚‹è‡ªç”±ã‚¨ãƒãƒ«ã‚®ãƒ¼è¨ˆç®—ã®ãŸã‚ã®ã€Morphing
+  !å†…éƒ¨ã§ã®ã¨ã‚Šã‚ã¤ã‹ã„ã¯FIXCã¨åŒä¸€ã«ã™ã‚‹ã€‚
+  !ã¨ã‚Šã‚ãˆãšå˜ä¸€æˆåˆ†ã®ã¿morphã§ãã‚‹ã‚‚ã®ã¨ã™ã‚‹ã€‚
   !
   type( sRigidMorph ) :: rigidmorph
   real(kind=8)        :: mixi, mixf, mix
-  integer             :: morphcompo
 
   real(kind=8)        :: dudl, dudlsum
   !for debug
@@ -235,38 +243,39 @@ program main
   real(kind=8)        :: tx(1000), ty(1000), tz(1000)
 #endif
   !
-  !Jarzynski. ¤É¤¦¤ä¤Ã¤ÆÈÆ²½¤¹¤ì¤Ğ¤¤¤¤¤«¤è¤¯¤ï¤«¤é¤Ê¤¤¤Î¤Ç¡¢ÅöÌÌmorphing¤À¤±¤ò¹ÍÎ¸¤¹¤ë¡£
+  !Jarzynski. ã©ã†ã‚„ã£ã¦æ±åŒ–ã™ã‚Œã°ã„ã„ã‹ã‚ˆãã‚ã‹ã‚‰ãªã„ã®ã§ã€å½“é¢morphingã ã‘ã‚’è€ƒæ…®ã™ã‚‹ã€‚
   !
   logical             :: fJar
   integer             :: iJar
   real(kind=8)        :: epjar     ! work in a step
   real(kind=8)        :: jarwork( MAXCOMBI )   ! total work
+#endif ! JARZYNSKI
   !
-  !writeÊ¸¤òÀ°Íı¤¹¤ë¡£
+  !writeæ–‡ã‚’æ•´ç†ã™ã‚‹ã€‚
   !
   type(real8stack)    :: output
 
   !
-  !Á´¥¨¥Í¥ë¥®¡¼¤ò½êÄê¤ÎÃÍ¤Ë¼ıÂ«¤µ¤»¤ë¡£
+  !å…¨ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’æ‰€å®šã®å€¤ã«åæŸã•ã›ã‚‹ã€‚
   !
   real(kind=8) :: hset_value, hset_ratio, hset_ep, hset_ek, hset_param
   integer      :: hset_freq
 
 #ifdef USE_REPLICA
   !
-  !¥×¥í¥»¥¹»ş´Ö¤Î¶Ñ¹Õ
+  !ãƒ—ãƒ­ã‚»ã‚¹æ™‚é–“ã®å‡è¡¡
   !
   integer :: deltatime, avgtime
   real    :: speed
   integer :: processtime(300), processloop(300), processaccm(300)
   integer :: ierr, intercept, ninnerloop
   !
-  !replica¤Î¾õ¶·
+  !replicaã®çŠ¶æ³
   !
   real(kind=8) :: rep_energy(300), rep_beta(300)
   type(sMDReplica) :: mdreplica
   !
-  !·×»»¤¹¤Ù¤­OPÎÎ°è1..N¤ò¡¢¤É¤Î¥Î¡¼¥É¤¬Ã´¤Ã¤Æ¤¤¤ë¤«¡£ÆÉ¤ß¹ş¤ß»şÅÀ¤Ç¤Ï¡¢ÎÎ°è½ç¤Ë¥Î¡¼¥É¤Ë¤ï¤ê¤Õ¤é¤ì¤Æ¤¤¤ë¤â¤Î¤È¤¹¤ë¡£(ÅöÌÌ)Ê¿À®17Ç¯2·î11Æü(¶â)
+  !è¨ˆç®—ã™ã¹ãOPé ˜åŸŸ1..Nã‚’ã€ã©ã®ãƒãƒ¼ãƒ‰ãŒæ‹…ã£ã¦ã„ã‚‹ã‹ã€‚èª­ã¿è¾¼ã¿æ™‚ç‚¹ã§ã¯ã€é ˜åŸŸé †ã«ãƒãƒ¼ãƒ‰ã«ã‚ã‚Šãµã‚‰ã‚Œã¦ã„ã‚‹ã‚‚ã®ã¨ã™ã‚‹ã€‚(å½“é¢)å¹³æˆ17å¹´2æœˆ11æ—¥(é‡‘)
   !
   integer :: node_in_charge(300)
   character(len=100)  ::  configfilename
@@ -285,10 +294,10 @@ program main
   !real(kind=8), dimension(MAXMOL) :: comx0,comy0,comz0,qa0,qb0,qc0,qd0
   !real(kind=8), dimension(MAXMOL) :: comx1,comy1,comz1,qa1,qb1,qc1,qd1
   !real(kind=8), dimension(MAXMOL) :: forcex,forcey,forcez
-  !microcanonical¤ÎÁ´¥¨¥Í¥ë¥®¡¼¡£
+  !microcanonicalã®å…¨ã‚¨ãƒãƒ«ã‚®ãƒ¼ã€‚
   !     initialization
-  !     ¤¦¤Ş¤¯»»Äø²½¤·¤¿¤¤¡£¤È¤ê¤¢¤¨¤º¡¢½é´ü²½¤¹¤Ù¤­¹½Â¤ÂÎ¤ò¤¹¤Ù¤Æ¤½¤Î¤Ş¤Ş
-  !     ¤ï¤¿¤¹¤³¤È¤Ë¤¹¤ë¡£
+  !     ã†ã¾ãç®—ç¨‹åŒ–ã—ãŸã„ã€‚ã¨ã‚Šã‚ãˆãšã€åˆæœŸåŒ–ã™ã¹ãæ§‹é€ ä½“ã‚’ã™ã¹ã¦ãã®ã¾ã¾
+  !     ã‚ãŸã™ã“ã¨ã«ã™ã‚‹ã€‚
   call new(nose)
   call new(site, MAXsite_total)
   call new(an)
@@ -297,7 +306,7 @@ program main
   call new(co)
   call new(bk)
   call new(g)
-  call new( output, 100 ) !½ĞÎÏÍÑ¥¹¥¿¥Ã¥¯
+  call new( output, 100 ) !å‡ºåŠ›ç”¨ã‚¹ã‚¿ãƒƒã‚¯
 #ifdef MEMUSAGE
   call new( mon(1), MON_MAXIMUM, MAXGRIDX,&
        MON_HALT, "MAXGRIDX                  ", 0 )
@@ -324,7 +333,7 @@ program main
   call new(mdreplica)
 #endif
   !
-  !Áê¸ßºîÍÑ¤ËÈæÎã·¸¿ô¤ò³İ¤±¤ë¡£½é´üÃÍ¤Ï1
+  !ç›¸äº’ä½œç”¨ã«æ¯”ä¾‹ä¿‚æ•°ã‚’æ›ã‘ã‚‹ã€‚åˆæœŸå€¤ã¯1
   !
   ivscale(:,:) = 1d0
   ScaleSWSI    = 1d0
@@ -332,7 +341,7 @@ program main
   tiea = 0d0
   hset_freq = 0
   !
-  !3¤ÄÁÈ¤Î½é´ü²½
+  !3ã¤çµ„ã®åˆæœŸåŒ–
   !
   triplet%size = 0
 
@@ -350,14 +359,16 @@ program main
   nlog=0
   nstep=0
   isFixed = .false.
+#ifdef JARZYNSKI
   mixi = 0
   mixf = 0
   morphcompo  = 0
   dudlsum = 0d0
   rigidmorph%mode = rigidmorph_none
   fJar = .false.
+#endif !JARZYNSKI
   !
-  !Á´ÂÎ¤Î²óÅ¾¤ÎÄä»ß
+  !å…¨ä½“ã®å›è»¢ã®åœæ­¢
   !
   stoprotation = 0
   !
@@ -365,20 +376,20 @@ program main
   !
   stopdrift = 0
   !
-  !½Å¿´¤òºÂÉ¸¸¶ÅÀ¤Ë
+  !é‡å¿ƒã‚’åº§æ¨™åŸç‚¹ã«
   !
   shifttoorigin = 0
   !
-  !²¹ÅÙ¤ÎºÆÀßÄê(<0¤Î¾ì¹ç¤ÏÀßÄê¤·¤Ê¤¤)
+  !æ¸©åº¦ã®å†è¨­å®š(<0ã®å ´åˆã¯è¨­å®šã—ãªã„)
   !
   settemp = -1d0
   !
-  !binary¤«¤éÆÉ¤ß¤³¤ó¤Àtie¤ÎÀ®Ê¬¿ô
+  !binaryã‹ã‚‰èª­ã¿ã“ã‚“ã tieã®æˆåˆ†æ•°
   !
   ntie = 0
   mnomiac=0
   !
-  !Ç°¤Î¤¿¤á½é´ü²½
+  !å¿µã®ãŸã‚åˆæœŸåŒ–
   !
   do i=1,MAXCOMPO
      call Tie_Constructor(tie(i))
@@ -386,9 +397,9 @@ program main
 
   ncompo=0
   incompo=-1
-  !     ÃæÅÓÈ¾Ã¼¤Ë¤Ş¤¼¤ë¤È¤ä¤ä¤³¤·¤¤¤Î¤Ç¡¢
-  !     ´ğËÜÅª¤Ë¤¹¤Ù¤Æbinary I/O¤È¤¹¤ë¡£
-  !     ÊÑ¹¹É¬Í×
+  !     ä¸­é€”åŠç«¯ã«ã¾ãœã‚‹ã¨ã‚„ã‚„ã“ã—ã„ã®ã§ã€
+  !     åŸºæœ¬çš„ã«ã™ã¹ã¦binary I/Oã¨ã™ã‚‹ã€‚
+  !     å¤‰æ›´å¿…è¦
   !
   !leave this for compatibility 2005-8-31
   !
@@ -420,7 +431,7 @@ program main
         cycle
      endif
      !
-     !Morphing¤Î½é´üºÂÉ¸¤ò¥Õ¥¡¥¤¥ë¤«¤éÆÉ¤ß¤³¤à¾ì¹ç¡¢¤É¤ÎÀ®Ê¬¤ò»È¤¦¤«¤ò»ØÄê¡£ÈÖ¹æ¤Ï1¤¬ºÇ½é¤ÎÀ®Ê¬¤òÉ½¤ï¤¹¡£
+     !Morphingã®åˆæœŸåº§æ¨™ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿ã“ã‚€å ´åˆã€ã©ã®æˆåˆ†ã‚’ä½¿ã†ã‹ã‚’æŒ‡å®šã€‚ç•ªå·ã¯1ãŒæœ€åˆã®æˆåˆ†ã‚’è¡¨ã‚ã™ã€‚
      !
      if(tag.eq."@DTPS")then
         call Time_ReadBinaryDTPS(t,TRAJIN)
@@ -442,7 +453,7 @@ program main
         cycle
      endif
      !
-     !iÈÖÌÜ¤ÎÀ®Ê¬¤ÈjÈÖÌÜ¤ÎÀ®Ê¬¤ÎÁê¸ßºîÍÑ¤ËÈæÎãÄê¿ô¤ò³İ¤±¤ë¡£
+     !iç•ªç›®ã®æˆåˆ†ã¨jç•ªç›®ã®æˆåˆ†ã®ç›¸äº’ä½œç”¨ã«æ¯”ä¾‹å®šæ•°ã‚’æ›ã‘ã‚‹ã€‚
      !
      if(tag.eq."@IVSC")then
         read(TRAJIN) i,j,value
@@ -451,7 +462,7 @@ program main
         cycle
      endif
      !
-     !SiliconÀìÍÑ; »°ÂÎÎÏ¤Î¤ß¤òscale¤¹¤ë¡£Volatile
+     !Siliconå°‚ç”¨; ä¸‰ä½“åŠ›ã®ã¿ã‚’scaleã™ã‚‹ã€‚Volatile
      !
      if(tag.eq."@IVSI")then
         read(TRAJIN) ScaleSWSI
@@ -470,13 +481,13 @@ program main
      endif
      if(tag.eq.'@WTG2'.or.tag.eq.'@RMMC')then
         !
-        !»ØÄê¤µ¤ì¤¿À®Ê¬¿ô¤òÆÉ¤ß¤³¤ó¤À¤éÆşÎÏ¤ò¤¦¤Á¤­¤ë¡£
+        !æŒ‡å®šã•ã‚ŒãŸæˆåˆ†æ•°ã‚’èª­ã¿ã“ã‚“ã ã‚‰å…¥åŠ›ã‚’ã†ã¡ãã‚‹ã€‚
         !
         if(ncompo.eq.incompo)then
            cycle
         endif
         !
-        !RigidMorph¤Î¾ì¹ç¤ÏÉ¬¤º¸ÇÄêºÂÉ¸°·¤¤¤È¤¹¤ë¡£
+        !RigidMorphã®å ´åˆã¯å¿…ãšå›ºå®šåº§æ¨™æ‰±ã„ã¨ã™ã‚‹ã€‚
         !
         if ( tag .eq. '@RMMC' ) then
            isFixed = .true.
@@ -497,8 +508,11 @@ program main
         if ( err .ne. error_none ) call die( err, "Main 4" )
         if ( mol(ncompo)%isRigid ) then
            if ( tag .eq. '@RMMC' ) then
+#ifdef JARZYNSKI
               call RigidMorph_ReadBinaryNX4A( rigidmorph, rigid( ncompo ), mol( ncompo ), site, TRAJIN )
               morphcompo = ncompo
+#else
+#endif !JARZYNSKI
            else
               call Rigid_ReadBinaryWTG2(rigid(ncompo),mol(ncompo),site,TRAJIN)
            endif
@@ -513,7 +527,7 @@ program main
      endif
      if(tag.eq.'@APC5')then
         !
-        !»ØÄê¤µ¤ì¤¿À®Ê¬¿ô¤òÆÉ¤ß¤³¤ó¤À¤éÆşÎÏ¤ò¤¦¤Á¤­¤ë¡£
+        !æŒ‡å®šã•ã‚ŒãŸæˆåˆ†æ•°ã‚’èª­ã¿ã“ã‚“ã ã‚‰å…¥åŠ›ã‚’ã†ã¡ãã‚‹ã€‚
         !
         if(ncompo.eq.incompo)then
            cycle
@@ -562,8 +576,8 @@ program main
   end do
 99 continue
   
-   !     Binary¤òÁ´ÉôÆÉ¤ß¤ª¤¨¤¿¤¢¤È¤Ç¡¢ÊÑ¹¹¤¹¤ëÉôÊ¬¤òstdin¤«¤éÆÉ¤à¡£
-   !     ¤³¤ì¤¬¤¤¤Á¤Ğ¤ó¤¹¤Ã¤­¤ê¤·¤Æ¤¤¤ë¡£
+   !     Binaryã‚’å…¨éƒ¨èª­ã¿ãŠãˆãŸã‚ã¨ã§ã€å¤‰æ›´ã™ã‚‹éƒ¨åˆ†ã‚’stdinã‹ã‚‰èª­ã‚€ã€‚
+   !     ã“ã‚ŒãŒã„ã¡ã°ã‚“ã™ã£ãã‚Šã—ã¦ã„ã‚‹ã€‚
 #ifdef USE_REPLICA
   CONFIGFILE=90
   call getarg( 1, configfilename )
@@ -589,7 +603,7 @@ program main
         cycle
      endif
      !
-     !°µÎÏ¥Æ¥ó¥½¥ë¤Î½ĞÎÏ
+     !åœ§åŠ›ãƒ†ãƒ³ã‚½ãƒ«ã®å‡ºåŠ›
      !
      if(tag.eq."@PTSO")then
         read(CONFIGFILE,*) ptensor
@@ -600,7 +614,7 @@ program main
         cycle
      endif
      !
-     !iÈÖÌÜ¤ÎÀ®Ê¬¤ÈjÈÖÌÜ¤ÎÀ®Ê¬¤ÎÁê¸ßºîÍÑ¤ËÈæÎãÄê¿ô¤ò³İ¤±¤ë¡£
+     !iç•ªç›®ã®æˆåˆ†ã¨jç•ªç›®ã®æˆåˆ†ã®ç›¸äº’ä½œç”¨ã«æ¯”ä¾‹å®šæ•°ã‚’æ›ã‘ã‚‹ã€‚
      !
      if(tag.eq."@IVSC")then
         read(CONFIGFILE,*) i,j,value
@@ -609,7 +623,7 @@ program main
         cycle
      endif
      !
-     !SiliconÀìÍÑ; »°ÂÎÎÏ¤Î¤ß¤òscale¤¹¤ë¡£Volatile
+     !Siliconå°‚ç”¨; ä¸‰ä½“åŠ›ã®ã¿ã‚’scaleã™ã‚‹ã€‚Volatile
      !
      if(tag.eq."@IVSI")then
         read(CONFIGFILE,*) ScaleSWSI
@@ -628,13 +642,13 @@ program main
      endif
      if(tag.eq.'@NX4A' .or. tag.eq.'@AR3A' .or. tag.eq.'@FL3A' .or. tag.eq.'@RMMC' )then
         !
-        !»ØÄê¤µ¤ì¤¿À®Ê¬¿ô¤òÆÉ¤ß¤³¤ó¤À¤éÆşÎÏ¤ò¤¦¤Á¤­¤ë¡£
+        !æŒ‡å®šã•ã‚ŒãŸæˆåˆ†æ•°ã‚’èª­ã¿ã“ã‚“ã ã‚‰å…¥åŠ›ã‚’ã†ã¡ãã‚‹ã€‚
         !
         if( ncompo.eq.incompo )then
            cycle
         endif
         !
-        !RigidMorph¤Î¾ì¹ç¤ÏÉ¬¤º¸ÇÄêºÂÉ¸°·¤¤¤È¤¹¤ë¡£
+        !RigidMorphã®å ´åˆã¯å¿…ãšå›ºå®šåº§æ¨™æ‰±ã„ã¨ã™ã‚‹ã€‚
         !
         if ( tag .eq. '@RMMC' ) then
            isFixed = .true.
@@ -680,8 +694,11 @@ program main
         endif
         if ( mol(ncompo)%isRigid ) then
            if ( tag .eq. '@RMMC' ) then
+#ifdef JARZYNSKI
               call RigidMorph_ReadNX4A( rigidmorph, rigid( ncompo ), mol( ncompo ), site, CONFIGFILE )
               morphcompo = ncompo
+#else
+#endif ! JARZYNSKI
            else
               call Rigid_ReadNX4A( rigid(ncompo),mol(ncompo),site,CONFIGFILE)
            endif
@@ -709,8 +726,8 @@ program main
         cycle
      endif
      !
-     !¹âÂ®¥Õ¥©¡¼¥¹½èÍı¡£Ê¬»Ò¼ï¤´¤È¤Î´Ø¿ô¤ò½àÈ÷¤¹¤ëÉ¬Í×¤¬¤¢¤ë¡£
-     !FAST=2¤Çmdgrape¤ò»È¤¦¤è¤¦¤Ë¤·¤è¤¦¤«¡£
+     !é«˜é€Ÿãƒ•ã‚©ãƒ¼ã‚¹å‡¦ç†ã€‚åˆ†å­ç¨®ã”ã¨ã®é–¢æ•°ã‚’æº–å‚™ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
+     !FAST=2ã§mdgrapeã‚’ä½¿ã†ã‚ˆã†ã«ã—ã‚ˆã†ã‹ã€‚
      !
      if(tag.eq."@FAST")then
         read(CONFIGFILE,*) i
@@ -718,25 +735,27 @@ program main
         cycle
      endif
      !
-     !true¤Ê¤é¼¡¤ÎÀ®Ê¬¤ÎºÂÉ¸¤ò¸ÇÄê
+     !trueãªã‚‰æ¬¡ã®æˆåˆ†ã®åº§æ¨™ã‚’å›ºå®š
      !
      if(tag.eq."@FIXC")then
         read(CONFIGFILE,*) isFixed
         cycle
      endif
+#ifdef JARZYNSKI
      if(tag.eq."@MRPH")then
-        ! ºÇ½é¤ÈºÇ¸å¤Ç¤Î¡¢2¹½Â¤¤Îº®¹çÈæ¤ò»ØÄê¤¹¤ë¡£Volatile.
+        ! æœ€åˆã¨æœ€å¾Œã§ã®ã€2æ§‹é€ ã®æ··åˆæ¯”ã‚’æŒ‡å®šã™ã‚‹ã€‚Volatile.
         read(CONFIGFILE,*) mixi, mixf
         cycle
      endif
      !
-     !Jarzynski¤Îwork¤Î·×»»¤ò¹Ô¤¦¤«¤É¤¦¤«
+     !Jarzynskiã®workã®è¨ˆç®—ã‚’è¡Œã†ã‹ã©ã†ã‹
      !
      if ( tag .eq. "@JZYN" ) then
         read(CONFIGFILE,*) ijar
         fjar = ( ijar.ne.0 )
         cycle
      endif
+#endif !JARZYNSKI
      if(tag.eq."@NLOG")then
         read(CONFIGFILE,*) nlog
         cycle
@@ -748,14 +767,14 @@ program main
         cycle
      endif
      if(tag.eq."@VSCA")then
-        !ÂÎÀÑ¤Î¤ß¥¹¥±¡¼¥ê¥ó¥°.ÂÎÀÑÈæ¤òÍ¿¤¨¤ë¡£
+        !ä½“ç©ã®ã¿ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°.ä½“ç©æ¯”ã‚’ä¸ãˆã‚‹ã€‚
         read(CONFIGFILE,*) vscale
         vscale=vscale**(1d0/3d0)
         cycle
      endif
      if(tag.eq."@TIEI")then
         !
-        !Á´Ê¬»Ò¤ò½Å¿´¤Ë·ë¤Ó¤Ä¤±¤ë¡£
+        !å…¨åˆ†å­ã‚’é‡å¿ƒã«çµã³ã¤ã‘ã‚‹ã€‚
         !
         read(CONFIGFILE,*) tiea,tieb
         cycle
@@ -763,11 +782,11 @@ program main
      if(tag.eq."@VSET")then
         read(CONFIGFILE,*) settemp,seed
         call new( random, seed )
-        !@VSET¤Ï·ë²Ì¤Ë½ĞÎÏ¤·¤Ê¤¤¡£
+        !@VSETã¯çµæœã«å‡ºåŠ›ã—ãªã„ã€‚
         cycle
      endif
      !
-     !Äê´üÅª¤Ë¡¢Á´¥¨¥Í¥ë¥®¡¼¤ò·×Â¬¤·¡¢¤½¤ì¤¬½êÄê¤ÎÃÍ¤Ë¤Ê¤ë¤è¤¦¤Ë½ù¡¹¤ËÂ®ÅÙ¤ò¥¹¥±¡¼¥ë¤¹¤ë¡£
+     !å®šæœŸçš„ã«ã€å…¨ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¨ˆæ¸¬ã—ã€ãã‚ŒãŒæ‰€å®šã®å€¤ã«ãªã‚‹ã‚ˆã†ã«å¾ã€…ã«é€Ÿåº¦ã‚’ã‚¹ã‚±ãƒ¼ãƒ«ã™ã‚‹ã€‚
      !
      if(tag.eq."@HSCA")then
         read(CONFIGFILE,*) hset_freq, hset_value, hset_ratio
@@ -788,7 +807,7 @@ program main
      endif
      if(tag.eq."@JOIN")then
         !
-        !Ê¬»ÒÂĞ¤ò¥Ğ¥Í¤Ç·ë¤Ö¡£
+        !åˆ†å­å¯¾ã‚’ãƒãƒã§çµã¶ã€‚
         !
         if ( incompo .lt. 0 ) then
            write(STDERR,*) "(JOIN) Number of components must be specified in advance explicitly."
@@ -796,7 +815,7 @@ program main
         endif
         read(CONFIGFILE,*) i,j
         !
-        !°Û¼ïÊ¬»Ò´Ö¤Îbind¤ÏÉ¬Í×¤¬¤¢¤ì¤Ğ¼ÂÁõ¤¹¤ë
+        !ç•°ç¨®åˆ†å­é–“ã®bindã¯å¿…è¦ãŒã‚ã‚Œã°å®Ÿè£…ã™ã‚‹
         !
         if ( i /= j ) call die( 0, "Main 15" )
         read(CONFIGFILE,*) press, stretch
@@ -824,7 +843,7 @@ program main
      endif
      if(tag.eq."@JMON")then
         !
-        !Ê¬»ÒÂĞ¤ò¥Ğ¥Í¤Ç·ë¤ó¤À¤È²¾Äê¤·¤¿¾ì¹ç¤Î¥¨¥Í¥ë¥®¡¼¤ò·×»»¤¹¤ë¤¬¡¢Á´¥¨¥Í¥ë¥®¡¼¤Ë¤Ï²Ã»»¤·¤Ê¤¤¡£
+        !åˆ†å­å¯¾ã‚’ãƒãƒã§çµã‚“ã ã¨ä»®å®šã—ãŸå ´åˆã®ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¨ˆç®—ã™ã‚‹ãŒã€å…¨ã‚¨ãƒãƒ«ã‚®ãƒ¼ã«ã¯åŠ ç®—ã—ãªã„ã€‚
         !
         if ( incompo .lt. 0 ) then
            write(STDERR,*) "(JOIN) Number of components must be specified in advance explicitly."
@@ -832,7 +851,7 @@ program main
         endif
         read(CONFIGFILE,*) i,j
         !
-        !°Û¼ïÊ¬»Ò´Ö¤Îbind¤ÏÉ¬Í×¤¬¤¢¤ì¤Ğ¼ÂÁõ¤¹¤ë
+        !ç•°ç¨®åˆ†å­é–“ã®bindã¯å¿…è¦ãŒã‚ã‚Œã°å®Ÿè£…ã™ã‚‹
         !
         if ( i /= j ) call die( 0, "Main 17" )
         read(CONFIGFILE,*) press, stretch
@@ -861,7 +880,7 @@ program main
 #ifdef SOLVATIONTEST
      if(tag.eq."@HBJO")then
         !
-        !Ê¬»ÒÂĞ¤ò¥Ğ¥Í¤Ç·ë¤Ö¡£
+        !åˆ†å­å¯¾ã‚’ãƒãƒã§çµã¶ã€‚
         !
         if ( incompo .lt. 0 ) then
            write(STDERR,*) "(JOIN) Number of components must be specified in advance explicitly."
@@ -869,7 +888,7 @@ program main
         endif
         read(CONFIGFILE,*) i,j
         !
-        !°Û¼ïÊ¬»Ò´Ö¤Îbind¤ÏÉ¬Í×¤¬¤¢¤ì¤Ğ¼ÂÁõ¤¹¤ë
+        !ç•°ç¨®åˆ†å­é–“ã®bindã¯å¿…è¦ãŒã‚ã‚Œã°å®Ÿè£…ã™ã‚‹
         !
         if ( i /= j ) call die( 0, "Main 19" )
 
@@ -889,8 +908,8 @@ program main
               exit
            endif
            !
-           !ii¤«¤é¤Î2ËÜÌÜ¤Î½Ğ·ë¹ç¤Ç¤¢¤ì¤Ğ¡¢bonds¤ÎÃÍ¤ò2¤È¤¹¤ë¡£3ËÜÌÜ°Ê¾å¤¬½Ğ¸½¤¹¤ë²ÄÇ½À­¤Ï¹Í¤¨¤Ê¤¯¤Æ¤è¤¤¡£
-           !¤³¤Î¤ä¤ê¤«¤¿¤À¤È¡¢i,j¤¬°Û¼ïÊ¬»Ò¤Î¤È¤­¤ËÇËÃ¾¤¹¤ë¤Î¤ÇÃí°Õ¡£
+           !iiã‹ã‚‰ã®2æœ¬ç›®ã®å‡ºçµåˆã§ã‚ã‚Œã°ã€bondsã®å€¤ã‚’2ã¨ã™ã‚‹ã€‚3æœ¬ç›®ä»¥ä¸ŠãŒå‡ºç¾ã™ã‚‹å¯èƒ½æ€§ã¯è€ƒãˆãªãã¦ã‚ˆã„ã€‚
+           !ã“ã®ã‚„ã‚Šã‹ãŸã ã¨ã€i,jãŒç•°ç¨®åˆ†å­ã®ã¨ãã«ç ´ç¶»ã™ã‚‹ã®ã§æ³¨æ„ã€‚
            !
            if ( 10 <= joint( i )%members( ii+1 ) ) then
               joint( i )%bonds( ii+1, jj+1 ) = 2
@@ -905,7 +924,9 @@ program main
         cycle
      endif
 #endif
+#ifdef USE_REPLICA
      call MDReplica_Loader( mdreplica, CONFIGFILE, tag )
+#endif
   enddo
 999 continue
 #ifdef USE_REPLICA
@@ -943,7 +964,7 @@ program main
            cycle
         endif
         !
-        !Morphing¤Î½é´üºÂÉ¸¤ò¥Õ¥¡¥¤¥ë¤«¤éÆÉ¤ß¤³¤à¾ì¹ç¡¢¤É¤ÎÀ®Ê¬¤ò»È¤¦¤«¤ò»ØÄê¡£ÈÖ¹æ¤Ï1¤¬ºÇ½é¤ÎÀ®Ê¬¤òÉ½¤ï¤¹¡£
+        !Morphingã®åˆæœŸåº§æ¨™ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿ã“ã‚€å ´åˆã€ã©ã®æˆåˆ†ã‚’ä½¿ã†ã‹ã‚’æŒ‡å®šã€‚ç•ªå·ã¯1ãŒæœ€åˆã®æˆåˆ†ã‚’è¡¨ã‚ã™ã€‚
         !
         if(tag.eq."@DTPS")then
            call Time_ReadBinaryDTPS(t,TRAJIN)
@@ -965,7 +986,7 @@ program main
            cycle
         endif
         !
-        !iÈÖÌÜ¤ÎÀ®Ê¬¤ÈjÈÖÌÜ¤ÎÀ®Ê¬¤ÎÁê¸ßºîÍÑ¤ËÈæÎãÄê¿ô¤ò³İ¤±¤ë¡£
+        !iç•ªç›®ã®æˆåˆ†ã¨jç•ªç›®ã®æˆåˆ†ã®ç›¸äº’ä½œç”¨ã«æ¯”ä¾‹å®šæ•°ã‚’æ›ã‘ã‚‹ã€‚
         !
         if(tag.eq."@IVSC")then
            read(TRAJIN) i,j,value
@@ -974,7 +995,7 @@ program main
            cycle
         endif
         !
-        !SiliconÀìÍÑ; »°ÂÎÎÏ¤Î¤ß¤òscale¤¹¤ë¡£Volatile
+        !Siliconå°‚ç”¨; ä¸‰ä½“åŠ›ã®ã¿ã‚’scaleã™ã‚‹ã€‚Volatile
         !
         if(tag.eq."@IVSI")then
            read(TRAJIN) ScaleSWSI
@@ -993,13 +1014,13 @@ program main
         endif
         if(tag.eq.'@WTG2'.or.tag.eq.'@RMMC')then
            !
-           !»ØÄê¤µ¤ì¤¿À®Ê¬¿ô¤òÆÉ¤ß¤³¤ó¤À¤éÆşÎÏ¤ò¤¦¤Á¤­¤ë¡£
+           !æŒ‡å®šã•ã‚ŒãŸæˆåˆ†æ•°ã‚’èª­ã¿ã“ã‚“ã ã‚‰å…¥åŠ›ã‚’ã†ã¡ãã‚‹ã€‚
            !
            if(ncompo.eq.incompo)then
               cycle
            endif
            !
-           !RigidMorph¤Î¾ì¹ç¤ÏÉ¬¤º¸ÇÄêºÂÉ¸°·¤¤¤È¤¹¤ë¡£
+           !RigidMorphã®å ´åˆã¯å¿…ãšå›ºå®šåº§æ¨™æ‰±ã„ã¨ã™ã‚‹ã€‚
            !
            if ( tag .eq. '@RMMC' ) then
               isFixed = .true.
@@ -1020,8 +1041,11 @@ program main
            if ( err .ne. error_none ) call die( err, "Main 4" )
            if ( mol(ncompo)%isRigid ) then
               if ( tag .eq. '@RMMC' ) then
+#ifdef JARZYNSKI
                  call RigidMorph_ReadBinaryNX4A( rigidmorph, rigid( ncompo ), mol( ncompo ), site, TRAJIN )
                  morphcompo = ncompo
+#else
+#endif
               else
                  call Rigid_ReadBinaryWTG2(rigid(ncompo),mol(ncompo),site,TRAJIN)
               endif
@@ -1036,7 +1060,7 @@ program main
         endif
         if(tag.eq.'@APC5')then
            !
-           !»ØÄê¤µ¤ì¤¿À®Ê¬¿ô¤òÆÉ¤ß¤³¤ó¤À¤éÆşÎÏ¤ò¤¦¤Á¤­¤ë¡£
+           !æŒ‡å®šã•ã‚ŒãŸæˆåˆ†æ•°ã‚’èª­ã¿ã“ã‚“ã ã‚‰å…¥åŠ›ã‚’ã†ã¡ãã‚‹ã€‚
            !
            if(ncompo.eq.incompo)then
               cycle
@@ -1103,7 +1127,7 @@ program main
   endif
   if ( .not. associated( mdreplica%rxgraph ) ) then
      !
-     !rxgraph¤¬»ØÄê¤µ¤ì¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ï¡¢½¾ÍèÄÌ¤êÀş·Á¤Ë¸ò´¹¤¹¤ë¤Î¤Ç¤Ï¤Ê¤¯¡¢´°Á´¥°¥é¥Õ¤òÍ¿¤¨¤ë¡£
+     !rxgraphãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€å¾“æ¥é€šã‚Šç·šå½¢ã«äº¤æ›ã™ã‚‹ã®ã§ã¯ãªãã€å®Œå…¨ã‚°ãƒ©ãƒ•ã‚’ä¸ãˆã‚‹ã€‚
      !
      call new( mdreplica%rxgraph )
      call graph_perfect( mdreplica%rxgraph, mdreplica%nprocs )
@@ -1112,7 +1136,7 @@ program main
   !call pair_show( mdreplica%rxpair, STDERR )
 #endif
   !
-  !À°¹çÀ­¤Î¥Á¥§¥Ã¥¯
+  !æ•´åˆæ€§ã®ãƒã‚§ãƒƒã‚¯
   !
   do compo=1,ncompo
      if ( tie(compo)%n > 0 .and. tie(compo)%n /= mol(compo)%nmol ) then
@@ -1121,7 +1145,7 @@ program main
      endif
   enddo
   !
-  !tiea¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤¿¤é¡¢TIE4¤ÇÆÉ¤ß¤³¤ó¤À¥Ğ¥ÍÄê¿ô¤ò¾å½ñ¤­¤·¤Æ¤è¤¤¡£
+  !tieaãŒè¨­å®šã•ã‚Œã¦ã„ãŸã‚‰ã€TIE4ã§èª­ã¿ã“ã‚“ã ãƒãƒå®šæ•°ã‚’ä¸Šæ›¸ãã—ã¦ã‚ˆã„ã€‚
   !
   if ( tiea > 0d0 ) then
      do compo=1,ncompo
@@ -1137,10 +1161,10 @@ program main
      ntie = ncompo
   endif
   !Hardcoding
-  !ÂÎÀÑÊÑ´¹Ê¿À®14Ç¯4·î25Æü(ÌÚ)
+  !ä½“ç©å¤‰æ›å¹³æˆ14å¹´4æœˆ25æ—¥(æœ¨)
   !
-  !vscale¤òÆÉ¤ß¤³¤ó¤À¾ì¹ç¤Ï¡¢ÂÎÀÑ¤ò¥¹¥±¡¼¥ë¤¹¤ë¤È¤È¤â¤Ë¡¢Ê¬»Ò¤Î½Å¿´°Ì
-  !ÃÖ¤â¥¹¥±¡¼¥ë¤¹¤ë¡£
+  !vscaleã‚’èª­ã¿ã“ã‚“ã å ´åˆã¯ã€ä½“ç©ã‚’ã‚¹ã‚±ãƒ¼ãƒ«ã™ã‚‹ã¨ã¨ã‚‚ã«ã€åˆ†å­ã®é‡å¿ƒä½
+  !ç½®ã‚‚ã‚¹ã‚±ãƒ¼ãƒ«ã™ã‚‹ã€‚
   !
   !write(STDERR,*) "VSCALE: ",vscale
   call scale(box,vscale)
@@ -1164,7 +1188,7 @@ program main
      endif
   enddo
   !write(6,*) t%dt
-  !ÆâÉôÃ±°Ì¤Ø¤ÎÊÑ´¹(Ê¿À®£±£²Ç¯£´·î£³Æü(·î)ÄÉ²Ã)
+  !å†…éƒ¨å˜ä½ã¸ã®å¤‰æ›(å¹³æˆï¼‘ï¼’å¹´ï¼”æœˆï¼“æ—¥(æœˆ)è¿½åŠ )
   !write(6,*) water%nmol,rwater%wx(1,1)
   do compo=1,ncompo
      if ( mol(compo)%isRigid ) then
@@ -1178,27 +1202,27 @@ program main
      write(STDERR,*) "Do not specify two temperature-contorolling methods at a time."
      call die( 0, "Main 21" )
   endif
-  !ÆâÉôÃ±°Ì¤ØÊÑ´¹Ê¿À®£±£²Ç¯£´·î£¶Æü(ÌÚ)
+  !å†…éƒ¨å˜ä½ã¸å¤‰æ›å¹³æˆï¼‘ï¼’å¹´ï¼”æœˆï¼–æ—¥(æœ¨)
   if(nose%active)nose%q=nose%q * t%dt
   if(an%mode.ne.noandersen)then
      if( .not. active( box ) )then
         write(STDERR,*)"Box is required to control pressure."
         call die( 0, "Main 22" )
      endif
-     !dof¤Ç³ä¤ì¤Ğ¤¿¤·¤«¤Ë¥·¥¹¥Æ¥à¥µ¥¤¥º¤Ë°ÍÂ¸¤·¤Ê¤¯¤Ï¤Ê¤ë¤¬¡¢¤¤¤¤¤Î¤«¡©
+     !dofã§å‰²ã‚Œã°ãŸã—ã‹ã«ã‚·ã‚¹ãƒ†ãƒ ã‚µã‚¤ã‚ºã«ä¾å­˜ã—ãªãã¯ãªã‚‹ãŒã€ã„ã„ã®ã‹ï¼Ÿ
 #ifdef TEST
      an%mass=an%mass/(t%dt**2)
      an%dump=an%dump
 #else
      if ( an%compat_pcn23 ) then
         !
-        !@PCN2/3¸ß´¹¥â¡¼¥É¡£Ê¿À®16Ç¯8·î30Æü(·î)ÇÑ»ß
+        !@PCN2/3äº’æ›ãƒ¢ãƒ¼ãƒ‰ã€‚å¹³æˆ16å¹´8æœˆ30æ—¥(æœˆ)å»ƒæ­¢
         !
         write(STDERR,*) "PCN3 compat"
         an%mass=an%mass / (t%dt**2*dof )
      else
         !
-        !Ê¬»Ò¤¢¤¿¤ê¤Î¼ÁÎÌ¤¬Í¿¤¨¤é¤ì¤ë¤â¤Î¤È¤¹¤ë¡£
+        !åˆ†å­ã‚ãŸã‚Šã®è³ªé‡ãŒä¸ãˆã‚‰ã‚Œã‚‹ã‚‚ã®ã¨ã™ã‚‹ã€‚
         !
         
         an%mass=an%mass * dof / t%dt**2
@@ -1213,8 +1237,8 @@ program main
      endif
   endif
   !
-  !GridÊ¬³ä¤ò»ÈÍÑ¤¹¤ë»ş¤ÏÄ¢Êí¤â»È¤¦(¤¿¤À¤·margin¤Ï0¤È¤·¡¢interval¤ò1¤Ë
-  !¤¹¤ë¤Î¤Ç¡¢¼Â¼Á¤Ï»È¤ï¤Ê¤¤¤Î¤ÈÊÑ¤ï¤é¤Ê¤¤¡£
+  !Gridåˆ†å‰²ã‚’ä½¿ç”¨ã™ã‚‹æ™‚ã¯å¸³ç°¿ã‚‚ä½¿ã†(ãŸã ã—marginã¯0ã¨ã—ã€intervalã‚’1ã«
+  !ã™ã‚‹ã®ã§ã€å®Ÿè³ªã¯ä½¿ã‚ãªã„ã®ã¨å¤‰ã‚ã‚‰ãªã„ã€‚
   !
   if(g%mode.ne.GRID_NONE)then
      if(.not.active(bk))then
@@ -1228,7 +1252,7 @@ program main
      call cutoff_initialize(co,rc-2d0,rc)
   endif
   !
-  !¤¤¤Á¤ª¤¦ÊÑ¤ÊÀßÄê¤ò¥Á¥§¥Ã¥¯¤·¤Æ¤ª¤¯¡£
+  !ã„ã¡ãŠã†å¤‰ãªè¨­å®šã‚’ãƒã‚§ãƒƒã‚¯ã—ã¦ãŠãã€‚
   !
   if(active(bk).and.g%mode.eq.GRID_NONE)then
      write(STDERR,*) "ERROR: GRID IS NECESSARY FOR BOOKING."
@@ -1238,6 +1262,7 @@ program main
      write(STDERR,*) "ERROR: CUTOFF IS NECESSARY FOR BOOKING."
      call die( 0, "Main 25" )
   endif
+#ifdef JARZYNSKI
   if ( fJar .and. rigidmorph%mode .ne. RigidMorph_Active ) then
      write(STDERR,*) "ERROR: RIGIDMORPH IS NECESSARY FOR FE ESTIMATION."
      call die( 0, "Main 26" )
@@ -1245,21 +1270,22 @@ program main
   if ( fjar ) then
      jarwork(:) = 0d0
   endif
+#endif !JARZYNSKI
   !
-  !Æ±¼ïÊ¬»Ò´Ö¤ÎÁê¸ßºîÍÑ(Ê¬»Ò¿ô¤òn¤È¤¹¤ë¤Èn(n+1)/2ÂĞ)
+  !åŒç¨®åˆ†å­é–“ã®ç›¸äº’ä½œç”¨(åˆ†å­æ•°ã‚’nã¨ã™ã‚‹ã¨n(n+1)/2å¯¾)
   !
   do compo=1,ncompo
      !
-     !Âè2¥Ñ¥é¥á¡¼¥¿¤ò¾ÊÎ¬¤·¤¿¾ì¹ç¤Ï¼«¸ÊÁê¸ßºîÍÑ¤È¤ß¤Ê¤¹¡£
+     !ç¬¬2ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’çœç•¥ã—ãŸå ´åˆã¯è‡ªå·±ç›¸äº’ä½œç”¨ã¨ã¿ãªã™ã€‚
      !
-     !DEC¤Ç¤Ïoptional¤Î°·¤¤¤¬¤¦¤Ş¤¯¤¤¤«¤Ê¤¤¤é¤·¤¤¤Î¤ÇÌÀ¼¨Åª¤Ë-1¤òÍ¿¤¨¤ë¡£
+     !DECã§ã¯optionalã®æ‰±ã„ãŒã†ã¾ãã„ã‹ãªã„ã‚‰ã—ã„ã®ã§æ˜ç¤ºçš„ã«-1ã‚’ä¸ãˆã‚‹ã€‚
      !
      call interaction_initialize(ww(compo),mol(compo)%nmol,-1)
      combi( compo ) = compo
      combj( compo ) = compo
   enddo
   !
-  !°Û¼ïÊ¬»Ò´Ö¤ÎÁê¸ßºîÍÑ(Ê¬»Ò¿ô¤òn,m¤È¤¹¤ë¤ÈnmÂĞ)
+  !ç•°ç¨®åˆ†å­é–“ã®ç›¸äº’ä½œç”¨(åˆ†å­æ•°ã‚’n,mã¨ã™ã‚‹ã¨nmå¯¾)
   !
   ncombi = ncompo
   do i=1,ncompo
@@ -1287,15 +1313,15 @@ program main
      if(bk%mode .eq. BOOK_AUTOINTERVAL)then
         call die( 0, "Main 27" )
         !
-        !¤Ş¤À¹Í¤¨¤Æ¤¤¤Ê¤¤¡£Ä¢ÊíË¡¤Ï¤Û¤È¤ó¤É»È¤ï¤Ê¤¤¤«¤éÌµ»ë¤·¤Æ¤â¹½¤ï
-        !¤Ê¤¤¤Î¤À¤¬¡¦¡¦¡¦!!!
+        !ã¾ã è€ƒãˆã¦ã„ãªã„ã€‚å¸³ç°¿æ³•ã¯ã»ã¨ã‚“ã©ä½¿ã‚ãªã„ã‹ã‚‰ç„¡è¦–ã—ã¦ã‚‚æ§‹ã‚
+        !ãªã„ã®ã ãŒãƒ»ãƒ»ãƒ»!!!
         !
         !com0(1:water%nmol)=rwater%mol(1:water%nmol)%com
         !call Book_ResetInterval(bk,co%Out+bk%margin,water%nmol,com0)
      endif
   else
      !
-     !·Ï¤¬¾®¤µ¤¤¾ì¹ç¤òÁÛÄê;Á´Ê¬»ÒÆ±»Î¤¬Áê¸ßºîÍÑ¤¹¤ë(¥°¥ê¥Ã¥ÉÊ¬³ä¤·¤Ê¤¤)
+     !ç³»ãŒå°ã•ã„å ´åˆã‚’æƒ³å®š;å…¨åˆ†å­åŒå£«ãŒç›¸äº’ä½œç”¨ã™ã‚‹(ã‚°ãƒªãƒƒãƒ‰åˆ†å‰²ã—ãªã„)
      !
      do j=1,ncombi
         call interaction_alltoall(ww(j))
@@ -1309,7 +1335,7 @@ program main
   !call Rigid_initialize(rwater,water)
   if(settemp.ge.0d0)then
      !
-     !settemp¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤¿¾ì¹ç¤Ï¡¢¶¯À©Åª¤Ë²¹ÅÙ¤òÄ´Àá¤¹¤ë¡£
+     !settempãŒè¨­å®šã•ã‚Œã¦ã„ãŸå ´åˆã¯ã€å¼·åˆ¶çš„ã«æ¸©åº¦ã‚’èª¿ç¯€ã™ã‚‹ã€‚
      !
      do compo=1,ncompo
         if ( mol(compo)%isRigid ) then
@@ -1320,7 +1346,7 @@ program main
      enddo
   endif
   !
-  !¥·¥ß¥å¥ì¡¼¥·¥ç¥ó¤Î¾ò·ï¤òSTDERR¤ËÉ½¼¨¤¹¤ë¡£
+  !ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®æ¡ä»¶ã‚’STDERRã«è¡¨ç¤ºã™ã‚‹ã€‚
   !
   write(STDERR,*) "Loop                                (steps):",nloop
   write(STDERR,*) "Interval                               (ps):",t%dt
@@ -1403,11 +1429,13 @@ program main
   write(STDERR,*) "    Feedback ratio                         :",hset_ratio
   endif
 
+#ifdef JARZYNSKI
   write(STDERR,*) "Morphing (Rigid)   g                       :",rigidmorph%mode
   if ( rigidmorph%mode .eq. rigidmorph_active ) then
   write(STDERR,*) "    From, To                               :",mixi,mixf
   write(STDERR,*) "    Component                              :",morphcompo
   endif
+#endif !JARZYNSKI
   write(STDERR,*) "Specified number of components             :",incompo
   do compo=1,ncompo
      write(STDERR,*) "Component ",compo
@@ -1480,7 +1508,7 @@ program main
   LOGFILE = STDOUT  
 #endif
   !
-  !¼çloop
+  !ä¸»loop
   !
   do loop=1,nloop
 #ifdef USE_REPLICA
@@ -1488,7 +1516,7 @@ program main
         call fakempif_timer_delta( deltatime )
         write( STDERR,* ) deltatime, "ms for MD loops."
         !
-        !·×»»»ş´Ö¤Î¶Ñ¹Õ²½
+        !è¨ˆç®—æ™‚é–“ã®å‡è¡¡åŒ–
         !
         speed = ninnerloop
         speed = speed / deltatime
@@ -1500,7 +1528,7 @@ program main
         if ( mdreplica%myrank == 0 ) then
            write( STDERR,* ) "Load balancing..."
            !
-           !¤Ş¤º¡¢Á´¥Î¡¼¥É¤Î·×»»»ş´Ö¤òµá¤á¡¢mdreplica%ninnerloop¥¹¥Æ¥Ã¥×Ê¬·×»»¤¹¤ë¤Î¤ËÉ¬Í×¤ÊÊ¿¶Ñ»ş´Ö¤òµá¤á¤ë¡£
+           !ã¾ãšã€å…¨ãƒãƒ¼ãƒ‰ã®è¨ˆç®—æ™‚é–“ã‚’æ±‚ã‚ã€mdreplica%ninnerloopã‚¹ãƒ†ãƒƒãƒ—åˆ†è¨ˆç®—ã™ã‚‹ã®ã«å¿…è¦ãªå¹³å‡æ™‚é–“ã‚’æ±‚ã‚ã‚‹ã€‚
            !
            avgtime = 0
            do i=1, mdreplica%nprocs
@@ -1508,7 +1536,7 @@ program main
            enddo
            avgtime = avgtime / mdreplica%nprocs
            !
-           !º£ÅÙ¤Ï¡¢³Æ¥Î¡¼¥É¤Î·×»»Â®ÅÙ¤ò¤â¤È¤Ë¡¢avgtime´Ö¤Ç·×»»¤Ç¤­¤ë¥ë¡¼¥×¿ô¤òµá¤á¤ë¡£
+           !ä»Šåº¦ã¯ã€å„ãƒãƒ¼ãƒ‰ã®è¨ˆç®—é€Ÿåº¦ã‚’ã‚‚ã¨ã«ã€avgtimeé–“ã§è¨ˆç®—ã§ãã‚‹ãƒ«ãƒ¼ãƒ—æ•°ã‚’æ±‚ã‚ã‚‹ã€‚
            !
            finallap = .false.
            do i=1, mdreplica%nprocs
@@ -1536,8 +1564,8 @@ program main
         write( STDERR,* ) deltatime, "ms for scheduling task."
         !write(STDERR,*) "Next", mdreplica%myrank, ninnerloop
         !
-        !¼¡¤Ëreplica exchange¡£¸ò´¹¤¹¤ë¤«Èİ¤«¤ÎÈ½ÃÇ¤Ï¿Æ¥Î¡¼¥É¤¬¹Ô¤¤¡¢·ë²Ì¤òscatter¤¹¤ë¡£
-        !ÌµÂÌ¤ÊÄÌ¿®¤¬¤¢¤ë(¿Æ¤¬Êİ»ı¤·¤Æ¤¤¤ì¤Ğ¡¢gather¤¹¤ëÉ¬Í×¤¬¤Ê¤¤¤â¤Î)¤¬¡¢ÅöÌÌ°ÂÁ´À­¤ò½Å»ë¤¹¤ë¡£
+        !æ¬¡ã«replica exchangeã€‚äº¤æ›ã™ã‚‹ã‹å¦ã‹ã®åˆ¤æ–­ã¯è¦ªãƒãƒ¼ãƒ‰ãŒè¡Œã„ã€çµæœã‚’scatterã™ã‚‹ã€‚
+        !ç„¡é§„ãªé€šä¿¡ãŒã‚ã‚‹(è¦ªãŒä¿æŒã—ã¦ã„ã‚Œã°ã€gatherã™ã‚‹å¿…è¦ãŒãªã„ã‚‚ã®)ãŒã€å½“é¢å®‰å…¨æ€§ã‚’é‡è¦–ã™ã‚‹ã€‚
         !
         !
         !convert ep from internal unit to kelvin
@@ -1561,8 +1589,8 @@ program main
         if ( mdreplica%myrank == 0 ) then
            do i=1, mdreplica%nprocs
               !
-              !i¤Ï¥Î¡¼¥É¤ÎÈÖ¹æ¤Ç¤Ï¤Ê¤¯¡¢OPÎÎ°è¤ÎÈÖ¹æ¡£
-              !¤½¤ÎÎÎ°è¤òÃ´¤Ã¤Æ¤¤¤ënode¤Ïnode_in_charge(i)
+              !iã¯ãƒãƒ¼ãƒ‰ã®ç•ªå·ã§ã¯ãªãã€OPé ˜åŸŸã®ç•ªå·ã€‚
+              !ãã®é ˜åŸŸã‚’æ‹…ã£ã¦ã„ã‚‹nodeã¯node_in_charge(i)
               !
               n0 = node_in_charge(i)
               write(STDERR,'(i10,i3,1x,f13.4,1x,f5.0,1x,99(g10.3,1x,g10.3,1x,g10.3,1x,g10.3,1x))') &
@@ -1572,14 +1600,14 @@ program main
                    1d0/rep_beta(n0)
            enddo
            !
-           !node 0¤Ç¤Ş¤È¤á¤Æºî¶È¤ò¹Ô¤¦¤Î¤Ê¤é¡¢Replica Exchange¤òÊÂÎó¤Ë¼Â¹Ô¤¹¤ëÉ¬Í×¤Ï¤Ê¤¤¡£
+           !node 0ã§ã¾ã¨ã‚ã¦ä½œæ¥­ã‚’è¡Œã†ã®ãªã‚‰ã€Replica Exchangeã‚’ä¸¦åˆ—ã«å®Ÿè¡Œã™ã‚‹å¿…è¦ã¯ãªã„ã€‚
            if ( 1 < mdreplica%nprocs ) then
               do nexchange = 1, mdreplica%nexchange
                  k  = random_getnext( mdreplica%rand ) * mdreplica%rxpair%nbond + 1
                  j  = mdreplica%rxpair%a(k)
                  jj = mdreplica%rxpair%b(k)
-                 !j,jj¤Ï¥Î¡¼¥É¤ÎÈÖ¹æ¤Ç¤Ï¤Ê¤¯¡¢OPÎÎ°è¤ÎÈÖ¹æ¡£
-                 !¤½¤ÎÎÎ°è¤òÃ´¤Ã¤Æ¤¤¤ënode¤Ïnode_in_charge(j)
+                 !j,jjã¯ãƒãƒ¼ãƒ‰ã®ç•ªå·ã§ã¯ãªãã€OPé ˜åŸŸã®ç•ªå·ã€‚
+                 !ãã®é ˜åŸŸã‚’æ‹…ã£ã¦ã„ã‚‹nodeã¯node_in_charge(j)
                  accept = replica_exchange_trial( j, jj, node_in_charge, mdreplica%rand, rep_energy, rep_beta, 0 )
                  !
                  !When accepted, temp must be reflected to nose.
@@ -1630,7 +1658,7 @@ program main
      endif
 #endif
      !
-     !½Å¿´¤òºÂÉ¸¸¶ÅÀ¤Ë¥¹¥é¥¤¥É¤µ¤»¤ë¡£
+     !é‡å¿ƒã‚’åº§æ¨™åŸç‚¹ã«ã‚¹ãƒ©ã‚¤ãƒ‰ã•ã›ã‚‹ã€‚
      !
      if ( 0 < shifttoorigin ) then
       if( mod(loop-1,shifttoorigin) == 0 ) then
@@ -1654,7 +1682,7 @@ program main
                  call Rigid_ShiftPosition(rigid(compo),mol(compo),totalmoment)
               else
                  !
-                 !Ã±¤Ë¥·¥Õ¥È¤µ¤»¤ë¤À¤±¤Ê¤Î¤Ç¡¢flex()¤Î¾ğÊó¤ÏÉÔÍ×¡£
+                 !å˜ã«ã‚·ãƒ•ãƒˆã•ã›ã‚‹ã ã‘ãªã®ã§ã€flex()ã®æƒ…å ±ã¯ä¸è¦ã€‚
                  !
                  do i=1,mol(compo)%nmol*mol(compo)%nsite
                     j = i + mol(compo)%offset
@@ -1669,7 +1697,7 @@ program main
      endif
      endif
      !
-     !¥¯¥é¥¹¥¿Á´ÂÎ¤ÎÊÂ¿Ê¤ò»ß¤á¤ë
+     !ã‚¯ãƒ©ã‚¹ã‚¿å…¨ä½“ã®ä¸¦é€²ã‚’æ­¢ã‚ã‚‹
      !
      if ( 0 < stopdrift ) then
        if ( mod(loop-1,stopdrift) == 0 ) then
@@ -1701,13 +1729,13 @@ program main
      endif
      endif
      !
-     !  ¥¯¥é¥¹¥¿Á´ÂÎ¤Î²óÅ¾¤ò»ß¤á¤ë¡£(Bowl·¿¤Î³°¾ì¤òÍ¿¤¨¤ì¤Ğ¡¢ÊÂ¿Ê¤Ï»ß
-     !  ¤á¤ëÉ¬Í×¤¬¤Ê¤¯¤Ê¤ë¡£
+     !  ã‚¯ãƒ©ã‚¹ã‚¿å…¨ä½“ã®å›è»¢ã‚’æ­¢ã‚ã‚‹ã€‚(Bowlå‹ã®å¤–å ´ã‚’ä¸ãˆã‚Œã°ã€ä¸¦é€²ã¯æ­¢
+     !  ã‚ã‚‹å¿…è¦ãŒãªããªã‚‹ã€‚
      !
      if ( 0 < stoprotation ) then
      if ( mod(loop-1,stoprotation) == 0 ) then
         !
-        !·ÏÁ´ÂÎ¤Î²óÅ¾¤Î±¿Æ°ÎÌ¤òµá¤á¤ë¡£
+        !ç³»å…¨ä½“ã®å›è»¢ã®é‹å‹•é‡ã‚’æ±‚ã‚ã‚‹ã€‚
         !
         totalmoment%vec(:) = 0d0
         totaltensor(:,:) = 0d0
@@ -1725,7 +1753,7 @@ program main
            endif
         enddo
         !
-        !Á´ÂÎ¤Î³Ñ±¿Æ°ÎÌ¤Ïw = I**(-1) L¤Çµá¤á¤é¤ì¤ë¡£
+        !å…¨ä½“ã®è§’é‹å‹•é‡ã¯w = I**(-1) Lã§æ±‚ã‚ã‚‰ã‚Œã‚‹ã€‚
         !
         call InvSym33(totaltensor(1,1),totaltensor(2,2),totaltensor(3,3),&
              totaltensor(1,2),totaltensor(2,3),totaltensor(3,1))
@@ -1739,8 +1767,8 @@ program main
            enddo
         enddo
         !
-        !·ÏÁ´ÂÎ¤Î²óÅ¾±¿Æ°ÎÌ¤òº¹¤·¤Ò¤¯¡£º®¹çÊª¤Î¾ì¹ç¡¢¤É¤¦Ê¬ÇÛ¤¹¤ì¤Ğ¤è
-        !¤¤¤«¡£
+        !ç³»å…¨ä½“ã®å›è»¢é‹å‹•é‡ã‚’å·®ã—ã²ãã€‚æ··åˆç‰©ã®å ´åˆã€ã©ã†åˆ†é…ã™ã‚Œã°ã‚ˆ
+        !ã„ã‹ã€‚
         !
         !
         do compo=1,ncompo
@@ -1756,10 +1784,11 @@ program main
      endif
      endif
      !
-     !Í½Â¬»Ò½¤Àµ»ÒË¡¤ÎÍ½Â¬»Ò¡¢¤¢¤ë¤¤¤ÏÊ¬»Ò°ÌÃÖ¤Î·èÄê
+     !äºˆæ¸¬å­ä¿®æ­£å­æ³•ã®äºˆæ¸¬å­ã€ã‚ã‚‹ã„ã¯åˆ†å­ä½ç½®ã®æ±ºå®š
      !
      do compo=1,ncompo
         if ( mol(compo)%isFixed ) then
+#ifdef JARZYNSKI
            !
            !if rigidmorph is active,
            !
@@ -1771,8 +1800,8 @@ program main
               mix = mixi + mix * ( mixf - mixi )
               call RigidMorph_Interpolate( rigidmorph, mix, rigid(compo) )
               !
-              !mix¤òÈù¾®ÊÑ²½¤µ¤»¤¿»ş¤Î³ÆÁê¸ßºîÍÑÅÀ¤ÎÊÑ°Ì¤òµ­Ï¿¤·¤Æ¤ª¤¯¡£
-              !¼«Í³¥¨¥Í¥ë¥®¡¼·×»»¤òÂ®¤¯¤Ç¤­¤ë¤«¤â¤·¤ì¤Ê¤¤¡£Ê¿À®16Ç¯8·î19Æü(ÌÚ)
+              !mixã‚’å¾®å°å¤‰åŒ–ã•ã›ãŸæ™‚ã®å„ç›¸äº’ä½œç”¨ç‚¹ã®å¤‰ä½ã‚’è¨˜éŒ²ã—ã¦ãŠãã€‚
+              !è‡ªç”±ã‚¨ãƒãƒ«ã‚®ãƒ¼è¨ˆç®—ã‚’é€Ÿãã§ãã‚‹ã‹ã‚‚ã—ã‚Œãªã„ã€‚å¹³æˆ16å¹´8æœˆ19æ—¥(æœ¨)
               !
               call RigidMorph_SetTangentVectors0( rigidmorph, mix, rigid(compo), mol(compo), site )
 #ifdef DEBUGTX
@@ -1798,6 +1827,7 @@ program main
               enddo
 #endif
            endif
+#endif !JARZYNSKI
         else
            if ( mol(compo)%isRigid ) then
               call rigid_predict(rigid(compo),mol(compo))
@@ -1814,20 +1844,20 @@ program main
         call Andersen_Predict(an,box)
         do compo=1,ncompo
            if ( .not. mol(compo)%isFixed ) then
-              !!!°µÎÏ°ìÄê¤ÈÊ¬»Ò¸ÇÄê¤ÏÎ¾Î©¤¹¤ë¤«
+              !!!åœ§åŠ›ä¸€å®šã¨åˆ†å­å›ºå®šã¯ä¸¡ç«‹ã™ã‚‹ã‹
            endif
         enddo
      endif
      do compo=1,ncompo
         if ( mol(compo)%isRigid ) then
            !
-           !¹äÂÎ¤Î°ÌÃÖ¤È¸ş¤­¤«¤é¡¢¥µ¥¤¥È¤Î°ÌÃÖ¤ò·è¤á¤ë¡£
+           !å‰›ä½“ã®ä½ç½®ã¨å‘ãã‹ã‚‰ã€ã‚µã‚¤ãƒˆã®ä½ç½®ã‚’æ±ºã‚ã‚‹ã€‚
            !
            call Rigid_SetSitePosition(rigid(compo),mol(compo),site)
 
         else
            !
-           !ºÂÉ¸¤Ë¹´Â«¤òÍ¿¤¨¤ë¡£
+           !åº§æ¨™ã«æ‹˜æŸã‚’ä¸ãˆã‚‹ã€‚
            !
 #ifdef RATTLE
            call rattle_position( rattle, site )
@@ -1839,14 +1869,14 @@ program main
            enddo
 #endif
            !
-           !½ÀÆğÊ¬»Ò¤Î¥µ¥¤¥È°ÌÃÖ¤«¤é¡¢½Å¿´¤Î°ÌÃÖ¤ò·è¤á¤ë¡£
+           !æŸ”è»Ÿåˆ†å­ã®ã‚µã‚¤ãƒˆä½ç½®ã‹ã‚‰ã€é‡å¿ƒã®ä½ç½®ã‚’æ±ºã‚ã‚‹ã€‚
            !
            call flex_setcom( flex( compo ), mol( compo ), site )
         endif
      enddo
      !
-     !½Å¿´ºÂÉ¸¤À¤±¤òÄ¾Îó²½
-     !(½Å¿´¤òÊÌÇÛÎó¤Ç·×»»¤¹¤ë¤Î¤Ç¤¢¤ì¤Ğ¡¢TIP4P¤ËÂè5¤Î¥µ¥¤¥È¤òÍ¿¤¨¤ëÉ¬Í×¤Ï¤Ê¤¤¤Î¤Ç¤Ï¡©)
+     !é‡å¿ƒåº§æ¨™ã ã‘ã‚’ç›´åˆ—åŒ–
+     !(é‡å¿ƒã‚’åˆ¥é…åˆ—ã§è¨ˆç®—ã™ã‚‹ã®ã§ã‚ã‚Œã°ã€TIP4Pã«ç¬¬5ã®ã‚µã‚¤ãƒˆã‚’ä¸ãˆã‚‹å¿…è¦ã¯ãªã„ã®ã§ã¯ï¼Ÿ)
      !
      do compo=1, ncompo
         nmol = mol(compo)%nmol
@@ -1864,26 +1894,26 @@ program main
      if(active(bk))then
         bk%countdown=bk%countdown-1
         if(bk%countdown.le.0)then
-           ! ¥°¥ê¥Ã¥É¤ÎÊ¬³ä¤Î¤·¤«¤¿¤òÊÑ¤¨¤ëÉ¬Í×¤¬¤¢¤ë¤«¤É¤¦¤«È½ÃÇ¤¹¤ë¡£
-           ! ¥°¥ê¥Ã¥ÉÊ¬³ä¤ò¹¹¿·
+           ! ã‚°ãƒªãƒƒãƒ‰ã®åˆ†å‰²ã®ã—ã‹ãŸã‚’å¤‰ãˆã‚‹å¿…è¦ãŒã‚ã‚‹ã‹ã©ã†ã‹åˆ¤æ–­ã™ã‚‹ã€‚
+           ! ã‚°ãƒªãƒƒãƒ‰åˆ†å‰²ã‚’æ›´æ–°
            call Grid_Update(g, box, bk%outer)
            do i=1,ncombi
               call Interaction_Reset(ww(i))
            enddo
            !
-           !Ê¬»Ò¤ò¥»¥ë¤Ëµ¢Â°¤µ¤»¤ë¡£
+           !åˆ†å­ã‚’ã‚»ãƒ«ã«å¸°å±ã•ã›ã‚‹ã€‚
            !
            do i=1,ncompo
               call Address_Assign(addr(i),box,g,mol(i)%nmol,com(1,i))
            enddo
            !
-           !Æ±¼ïÊ¬»Ò´ÖÁê¸ßºîÍÑÂĞ¥ê¥¹¥È¤ÎºîÀ®
+           !åŒç¨®åˆ†å­é–“ç›¸äº’ä½œç”¨å¯¾ãƒªã‚¹ãƒˆã®ä½œæˆ
            !
            do i=1,ncompo
               call Grid_NeighborList(g,g%homo,ww(i),addr(i),addr(i))
            enddo
            !
-           !°Û¼ïÊ¬»Ò´ÖÁê¸ßºîÍÑÂĞ¥ê¥¹¥È¤ÎºîÀ®
+           !ç•°ç¨®åˆ†å­é–“ç›¸äº’ä½œç”¨å¯¾ãƒªã‚¹ãƒˆã®ä½œæˆ
            !
            do i=ncompo+1,ncombi
               call Grid_NeighborList(g,g%hetero,ww(i),&
@@ -1897,8 +1927,8 @@ program main
               !write(6,*) k, ww(k)%npair0, ww(k)%npair
            enddo
            if(bk%mode.eq.BOOK_AUTOINTERVAL)then
-              !Ä¢Êí¤Î¥Ş¡¼¥¸¥óÈ¾·ÂÆâ¤ËÊ¬»Ò¤¬¤É¤Î¤¯¤é¤¤¿¯Æş¤·¤Æ¤­¤¿¤«¤ò
-              !¥Á¥§¥Ã¥¯¤·¤Æ¡¢¼¡¤ËÄ¢Êí¤ò¹¹¿·¤¹¤Ù¤­¥¿¥¤¥ß¥ó¥°¤ò·èÄê¤¹¤ë¡£
+              !å¸³ç°¿ã®ãƒãƒ¼ã‚¸ãƒ³åŠå¾„å†…ã«åˆ†å­ãŒã©ã®ãã‚‰ã„ä¾µå…¥ã—ã¦ããŸã‹ã‚’
+              !ãƒã‚§ãƒƒã‚¯ã—ã¦ã€æ¬¡ã«å¸³ç°¿ã‚’æ›´æ–°ã™ã¹ãã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’æ±ºå®šã™ã‚‹ã€‚
               call die( 0, "Main 28" )
               !call Book_AssumeInterval(bk,ww%nmol_i,com0&
               !& ,Book_BestMargin(bk,ww%nmol_i,com0))
@@ -1910,8 +1940,8 @@ program main
            i = combi( k )
            j = combj( k )
            !
-           !Áê¸ßºîÍÑÂĞ¥ê¥¹¥È¤ò°µ½Ì¤·¤Æ¡¢¤¢¤È¤ÎÎÏ·×»»½èÍı¤ò¹âÂ®²½¤¹¤ë
-           !(¥Ù¥¯¥È¥ëµ¡¤Ç¤ÏÍ­¸ú)
+           !ç›¸äº’ä½œç”¨å¯¾ãƒªã‚¹ãƒˆã‚’åœ§ç¸®ã—ã¦ã€ã‚ã¨ã®åŠ›è¨ˆç®—å‡¦ç†ã‚’é«˜é€ŸåŒ–ã™ã‚‹
+           !(ãƒ™ã‚¯ãƒˆãƒ«æ©Ÿã§ã¯æœ‰åŠ¹)
            !
            if ( co%mode.ne.CUTOFF_NONE) then
               call Interaction_Compress(ww(k),com(1,i),com(1,j),&
@@ -1923,7 +1953,7 @@ program main
         enddo
      endif
      !
-     !Á´Ê¬»Ò¤Î¥µ¥¤¥È¤Ë²Ã¤ï¤ëÎÏ¤ò½é´ü²½¤¹¤ë¡£
+     !å…¨åˆ†å­ã®ã‚µã‚¤ãƒˆã«åŠ ã‚ã‚‹åŠ›ã‚’åˆæœŸåŒ–ã™ã‚‹ã€‚
      !
      call site_resetforce(site)
 
@@ -1938,17 +1968,17 @@ program main
         i = combi( k )
         j = combj( k )
         !
-        !Smooth cutoff¤Ë¤è¤ë¸º¿ê·¸¿ô¤ò»öÁ°·×»»
+        !Smooth cutoffã«ã‚ˆã‚‹æ¸›è¡°ä¿‚æ•°ã‚’äº‹å‰è¨ˆç®—
         !
         !call CutOff_Dimmer(co, ww(k), site, mol(i), mol(j) )
         call CutOff_Dimmer2( co, ww(k), com(1,i), com(1,j) )
         !
-        !Ì¯°Æ¤¬»×¤¤¤Ä¤«¤Ê¤¤¤Î¤Ç¡¢¤½¤Î¾ì¤ÇÊ¬»Ò¼ï¤ò¸«¤Ê¤¬¤é¤É¤ÎÁê¸ßºîÍÑ
-        !´Ø¿ô¤ò»È¤¦¤«¤òÈ½ÃÇ¤¹¤ë¡£¾­ÍèÊÌ¤ÎÊıË¡¤òºÎÍÑ¤¹¤ë²ÄÇ½À­¤¢¤ê¡£
+        !å¦™æ¡ˆãŒæ€ã„ã¤ã‹ãªã„ã®ã§ã€ãã®å ´ã§åˆ†å­ç¨®ã‚’è¦‹ãªãŒã‚‰ã©ã®ç›¸äº’ä½œç”¨
+        !é–¢æ•°ã‚’ä½¿ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹ã€‚å°†æ¥åˆ¥ã®æ–¹æ³•ã‚’æ¡ç”¨ã™ã‚‹å¯èƒ½æ€§ã‚ã‚Šã€‚
         !
         allocate( ep1(1:ww(k)%npair) )
         !
-        !³°¾ì¤È¤·¤ÆºîÍÑ¤¹¤ë(¸ÇÄê¤µ¤ì¤¿)Ê¬»ÒÆ±»Î¤ÎÁê¸ßºîÍÑ¤Ï·×»»¤·¤Ê¤¤¡£Ê¿À®16Ç¯8·î19Æü(ÌÚ)¤³¤ì¤Ë¤è¤ê¡¢³°¾ì¥µ¥¤¥È¤Ë¤Ï¡¢³°¾ì¥µ¥¤¥È°Ê³°¤«¤é¼õ¤±¤ëÎÏ¤¬ÃßÀÑ¤µ¤ì¤ë¡£¤³¤ì¤¬¡¢¦ËÊÑ²½¤ËÂĞ¤¹¤ë³°¾ì¤Î±şÅú¤ò·×»»¤¹¤ë¤Î¤ËÉ¬Í×¡£
+        !å¤–å ´ã¨ã—ã¦ä½œç”¨ã™ã‚‹(å›ºå®šã•ã‚ŒãŸ)åˆ†å­åŒå£«ã®ç›¸äº’ä½œç”¨ã¯è¨ˆç®—ã—ãªã„ã€‚å¹³æˆ16å¹´8æœˆ19æ—¥(æœ¨)ã“ã‚Œã«ã‚ˆã‚Šã€å¤–å ´ã‚µã‚¤ãƒˆã«ã¯ã€å¤–å ´ã‚µã‚¤ãƒˆä»¥å¤–ã‹ã‚‰å—ã‘ã‚‹åŠ›ãŒè“„ç©ã•ã‚Œã‚‹ã€‚ã“ã‚ŒãŒã€Î»å¤‰åŒ–ã«å¯¾ã™ã‚‹å¤–å ´ã®å¿œç­”ã‚’è¨ˆç®—ã™ã‚‹ã®ã«å¿…è¦ã€‚
         !
         if ( .not. ( i .eq. morphcompo .and. j .eq. morphcompo ) ) then
            call force(ww(k),mol(i),mol(j),site,ep1,virialp(k)%mat33, ffast, si(i),si(j) )
@@ -1956,7 +1986,7 @@ program main
         !   write( STDERR, * ) "Morph", i, j
         endif
         !
-        !Si¤Î3ÂÎÁê¸ßºîÍÑ¡£°ì±ş¤³¤³¤ËÅ¸³«¤·¤Æ½ñ¤¯¡£
+        !Siã®3ä½“ç›¸äº’ä½œç”¨ã€‚ä¸€å¿œã“ã“ã«å±•é–‹ã—ã¦æ›¸ãã€‚
         !
         if ( mol(i)%id(1:8) .eq. "SWSILICO" .and. ww(k)%isomol ) then
            call ComposeTriplets( ww(k), SWSILICON_A_REAL, mol(i)%nmol, triplet )
@@ -1987,8 +2017,9 @@ program main
         deallocate( ep1 )
      enddo
      !
-     !¦ËÊÑ²½¤Ë¤è¤ë³°¾ì¥İ¥Æ¥ó¥·¥ã¥ë¤ÎÊÑ²½ÎÌ¤Ï¡¢³°¾ì¥µ¥¤¥È¤Ë²Ã¤ï¤ëÎÏ¤Î¥Ù¥¯¥È¥ë¤È¡¢¦ËÊÑ²½¤Ë¤è¤ë³°¾ì¥µ¥¤¥È¤ÎÊÑ°Ì¥Ù¥¯¥È¥ë¤ÎÆâÀÑ¤Ç·×»»¤µ¤ì¤ë¡£See note 2004-08-20
+     !Î»å¤‰åŒ–ã«ã‚ˆã‚‹å¤–å ´ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã®å¤‰åŒ–é‡ã¯ã€å¤–å ´ã‚µã‚¤ãƒˆã«åŠ ã‚ã‚‹åŠ›ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã€Î»å¤‰åŒ–ã«ã‚ˆã‚‹å¤–å ´ã‚µã‚¤ãƒˆã®å¤‰ä½ãƒ™ã‚¯ãƒˆãƒ«ã®å†…ç©ã§è¨ˆç®—ã•ã‚Œã‚‹ã€‚See note 2004-08-20
      !
+#ifdef JARZYNSKI
      if ( 0 < morphcompo ) then
         compo = morphcompo
         dudl = 0d0
@@ -2003,6 +2034,7 @@ program main
         enddo
         dudlsum = dudlsum + dudl
      endif
+#endif !JARZYNSKI
 
      vpp%mat33(:,:) = 0d0
      epsum = 0d0
@@ -2016,11 +2048,11 @@ program main
      do i=1,3
         virialpsum = virialpsum + vpp%mat33(i,i)
      enddo
-     !Ê¿À®16Ç¯2·î8Æü(Æü)virialsum¤ÎÃÍ¤¬Àµ³Î¤Ëvirialpsum¤Î1/3¤Ë¤Ê¤ë¤³¤È¤ò³ÎÇ§¡£
+     !å¹³æˆ16å¹´2æœˆ8æ—¥(æ—¥)virialsumã®å€¤ãŒæ­£ç¢ºã«virialpsumã®1/3ã«ãªã‚‹ã“ã¨ã‚’ç¢ºèªã€‚
      write(LOGFILE,*) "VIRIAL",virialsum, virialpsum
 #endif
      !
-     !³°¾ì¤«¤é¤ÎÎÏ¤Î·×»»
+     !å¤–å ´ã‹ã‚‰ã®åŠ›ã®è¨ˆç®—
      !
      exsum = 0d0
      do compo=1,ncompo
@@ -2032,11 +2064,11 @@ program main
            enddo
            call interaction_force_tie(tie(compo),box,mol(compo)%nmol,com(1,compo),fcom,etie)
            !
-           !·×»»¤·¤¿ÎÏ¤ò½Å¿´¤ËÌá¤¹¡£
+           !è¨ˆç®—ã—ãŸåŠ›ã‚’é‡å¿ƒã«æˆ»ã™ã€‚
            !
            do i=1,mol(compo)%nmol
               !
-              !TIP4P¤Ê¤é5ÈÖÌÜ¤Î¥µ¥¤¥È¤¬½Å¿´¡£
+              !TIP4Pãªã‚‰5ç•ªç›®ã®ã‚µã‚¤ãƒˆãŒé‡å¿ƒã€‚
               !
               k = i*mol(compo)%nsite + mol(compo)%offset
               site%fx(k) = site%fx(k) + fcom(i)%vec(1)
@@ -2047,7 +2079,7 @@ program main
         endif
      enddo
      !
-     !Ê¬»ÒÂĞ·ÁÀ®ÎÏ
+     !åˆ†å­å¯¾å½¢æˆåŠ›
      !
      emonsum = 0d0
      do j = 1, ncombi
@@ -2058,11 +2090,11 @@ program main
            enddo
            call interaction_force_bind( bind(j), box, com( 1, compo ), fcom, ebind )
            !
-           !·×»»¤·¤¿ÎÏ¤ò½Å¿´¤ËÌá¤¹¡£
+           !è¨ˆç®—ã—ãŸåŠ›ã‚’é‡å¿ƒã«æˆ»ã™ã€‚
            !
            do i=1,mol(compo)%nmol
               !
-              !TIP4P¤Ê¤é5ÈÖÌÜ¤Î¥µ¥¤¥È¤¬½Å¿´¡£
+              !TIP4Pãªã‚‰5ç•ªç›®ã®ã‚µã‚¤ãƒˆãŒé‡å¿ƒã€‚
               !
               k = i*mol(compo)%nsite + mol(compo)%offset
               site%fx(k) = site%fx(k) + fcom(i)%vec(1)
@@ -2078,14 +2110,15 @@ program main
         endif
      enddo
      !
-     !Jarzynski¤ÎÊıË¡¤Ç¡¢work¤ò·×»»¤¹¤ë¡£
-     !³°¾ì¤òÈù¾®ÊÑ²½¤µ¤»¤¿¾ì¹ç¤Î¥İ¥Æ¥ó¥·¥ã¥ë¥¨¥Í¥ë¥®¡¼¤ÎÊÑ²½¤ÎÀÑ»»
+     !Jarzynskiã®æ–¹æ³•ã§ã€workã‚’è¨ˆç®—ã™ã‚‹ã€‚
+     !å¤–å ´ã‚’å¾®å°å¤‰åŒ–ã•ã›ãŸå ´åˆã®ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã‚¨ãƒãƒ«ã‚®ãƒ¼ã®å¤‰åŒ–ã®ç©ç®—
      !
+#ifdef JARZYNSKI
      if ( fJar ) then
         do compo=1,ncompo
            if ( mol(compo)%isRigid .and. mol(compo)%isFixed .and. compo .eq. morphcompo ) then
               !
-              !¤Ş¤º³°¾ì=¥¯¥é¥¹¥¿¤Î·Á¤ò¤¹¤³¤·¤À¤±ÊÑ²½¤µ¤»¤ë¡£
+              !ã¾ãšå¤–å ´=ã‚¯ãƒ©ã‚¹ã‚¿ã®å½¢ã‚’ã™ã“ã—ã ã‘å¤‰åŒ–ã•ã›ã‚‹ã€‚
               !
               !
               !set new coordinate of the molecules
@@ -2094,11 +2127,11 @@ program main
               mix = mixi + mix * ( mixf - mixi )
               call RigidMorph_Interpolate( rigidmorph, mix, rigid(compo) )
               !
-              !¹äÂÎ¤Î°ÌÃÖ¤È¸ş¤­¤«¤é¡¢¥µ¥¤¥È¤Î°ÌÃÖ¤ò·è¤á¤ë¡£
+              !å‰›ä½“ã®ä½ç½®ã¨å‘ãã‹ã‚‰ã€ã‚µã‚¤ãƒˆã®ä½ç½®ã‚’æ±ºã‚ã‚‹ã€‚
               !
               call rigid_setsiteposition(rigid(compo),mol(compo),site)
               !
-              !½Å¿´°ÌÃÖ¤ò¹¹¿·¤¹¤ë
+              !é‡å¿ƒä½ç½®ã‚’æ›´æ–°ã™ã‚‹
               !
               nmol = mol(compo)%nmol
               com( 1:nmol, compo ) = rigid( compo )%mol(1:nmol)%com
@@ -2120,10 +2153,11 @@ program main
            endif
            jarwork( k )  = jarwork( k ) + epjar
            !
-           !Ä¾ÀÜU¤ÎÊÑÎÌ¤òµá¤á¤ë¤³¤ÎÊıË¡¤Ï¡¢Àµ¤·¤¯Æ°¤¤¤Æ¤¤¤ë¤è¤¦¤À¤¬¡¢¥³¥¹¥È¤¬¹â¤¤¤Î¤Ç¤¤¤º¤ìÇÑ»ß¤¹¤ë¡£
+           !ç›´æ¥Uã®å¤‰é‡ã‚’æ±‚ã‚ã‚‹ã“ã®æ–¹æ³•ã¯ã€æ­£ã—ãå‹•ã„ã¦ã„ã‚‹ã‚ˆã†ã ãŒã€ã‚³ã‚¹ãƒˆãŒé«˜ã„ã®ã§ã„ãšã‚Œå»ƒæ­¢ã™ã‚‹ã€‚
            !
         enddo
      endif
+#endif !JARZYNSKI
            
      eksum = 0d0
      ektsum = 0d0
@@ -2132,34 +2166,34 @@ program main
         if ( .not. mol(compo)%isFixed ) then
            if ( mol(compo)%isRigid ) then
               !
-              !¹äÂÎÊ¬»ÒÃ±°Ì¤ÇÎÏ¤ò½¸·×¤·¡¢ÊÂ¿Ê¤È²óÅ¾¤ÎÎÏ¤ËÊ¬Îà¤¹¤ë¡£
+              !å‰›ä½“åˆ†å­å˜ä½ã§åŠ›ã‚’é›†è¨ˆã—ã€ä¸¦é€²ã¨å›è»¢ã®åŠ›ã«åˆ†é¡ã™ã‚‹ã€‚
               !
               call rigid_collectforce(rigid(compo),mol(compo),site)
               !
-              !Í½Â¬»Ò½¤Àµ»ÒË¡¤Î½¤Àµ»Ò
+              !äºˆæ¸¬å­ä¿®æ­£å­æ³•ã®ä¿®æ­£å­
               !
               call rigid_correct2(rigid(compo),mol(compo),t,nose,an)
               !
-              !±¿Æ°¥¨¥Í¥ë¥®¡¼¤Î»»½Ğ
+              !é‹å‹•ã‚¨ãƒãƒ«ã‚®ãƒ¼ã®ç®—å‡º
               !
               call rigid_ek(rigid(compo),mol(compo),t,ekt(compo),ekr(compo))
               ektsum = ektsum + ekt(compo)
               ekrsum = ekrsum + ekr(compo)
               !
-              !°µÎÏ¥Æ¥ó¥½¥ë¤Î±¿Æ°ÎÌÀ®Ê¬
+              !åœ§åŠ›ãƒ†ãƒ³ã‚½ãƒ«ã®é‹å‹•é‡æˆåˆ†
               !
               call Rigid_PressureTensor( rigid(compo),mol(compo),t,virialk(compo)%mat33 )
            else
               !
-              !CORS¤Ë²Ã¤ï¤Ã¤¿ÎÏ¤Ï¡¢¥«¥Ã¥È¥ª¥Õ¤ÎºîÍÑ¤·¤Æ¤¤¤ë¥µ¥¤¥È¤Ë¼ÁÎÌÈæ¤ÇÊ¬ÇÛ¤¹¤ë¡£
+              !CORSã«åŠ ã‚ã£ãŸåŠ›ã¯ã€ã‚«ãƒƒãƒˆã‚ªãƒ•ã®ä½œç”¨ã—ã¦ã„ã‚‹ã‚µã‚¤ãƒˆã«è³ªé‡æ¯”ã§åˆ†é…ã™ã‚‹ã€‚
               !
               call flex_distributeforce( flex( compo ), mol( compo ), site )
               !
-              !Í½Â¬»Ò½¤Àµ»ÒË¡¤Î½¤Àµ»Ò
+              !äºˆæ¸¬å­ä¿®æ­£å­æ³•ã®ä¿®æ­£å­
               !
               call flex_correct2(flex(compo),mol(compo),site,t,nose,an)
               !
-              !ºÂÉ¸¤Ë¹´Â«¤òÍ¿¤¨¤ë¡£
+              !åº§æ¨™ã«æ‹˜æŸã‚’ä¸ãˆã‚‹ã€‚
               !
               !call rattle_position( rattle, site )
               !do i=1, mol(compo)%nmol * mol(compo)%nsite
@@ -2169,7 +2203,7 @@ program main
               !   flex(compo)%xinfo(i)%dz(1) = flex(compo)%xinfo(i)%dz(1) + rattle%vz(rsite)
               !enddo
               !
-              !Â®ÅÙ¤Ë¹´Â«¤òÍ¿¤¨¤ë¡£
+              !é€Ÿåº¦ã«æ‹˜æŸã‚’ä¸ãˆã‚‹ã€‚
               !
               !do i=1, mol(compo)%nmol * mol(compo)%nsite
               !   rsite = flex( compo )%xinfo(i)%rattlesite
@@ -2185,7 +2219,7 @@ program main
               !   flex(compo)%xinfo(i)%dz(1) = rattle%vz(rsite)
               !enddo
               !
-              !±¿Æ°¥¨¥Í¥ë¥®¡¼¤Î»»½Ğ
+              !é‹å‹•ã‚¨ãƒãƒ«ã‚®ãƒ¼ã®ç®—å‡º
               !
               call flex_ek(flex(compo),mol(compo),t,ekt(compo))
               ektsum = ektsum + ekt(compo)
@@ -2203,33 +2237,33 @@ program main
      !write(6,*) vpk%mat33(1,1) + vpk%mat33(2,2) + vpk%mat33(3,3)  !OK
      !write(6,*) vpp%mat33(1,1) + vpp%mat33(2,2) + vpp%mat33(3,3)  !NG
      !
-     !Volume x Pressure = vp¤ÎÂĞ³ÑÀ®Ê¬¤ÎÏÂ
+     !Volume x Pressure = vpã®å¯¾è§’æˆåˆ†ã®å’Œ
 
      !
      volumepressure = vp%mat33(1,1)+vp%mat33(2,2)+vp%mat33(3,3)
 #ifdef DEBUG
-     !Ê¿À®16Ç¯2·î8Æü(Æü)Á°¼Ô¤ÎÃÍ¤¬Àµ³Î¤Ë¸å¼Ô¤Î1/3¤Ë¤Ê¤ë¤³¤È¤ò³ÎÇ§¡£
+     !å¹³æˆ16å¹´2æœˆ8æ—¥(æ—¥)å‰è€…ã®å€¤ãŒæ­£ç¢ºã«å¾Œè€…ã®1/3ã«ãªã‚‹ã“ã¨ã‚’ç¢ºèªã€‚
      write(LOGFILE,*) "VP", (2d0/3d0)*ektsum + virialsum, volumepressure
 #endif
      !
-     !±¿Æ°¥¨¥Í¥ë¥®¡¼¤ò²¹ÅÙ¤Ë´¹»»(¸ÇÄê¤µ¤ì¤Æ¤¤¤ëÊ¬»Ò¤ÏÌµ»ë¤µ¤ì¤ë¡£)
+     !é‹å‹•ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’æ¸©åº¦ã«æ›ç®—(å›ºå®šã•ã‚Œã¦ã„ã‚‹åˆ†å­ã¯ç„¡è¦–ã•ã‚Œã‚‹ã€‚)
      !
      temperature = I2J*2d0*eksum/(rgas*dof)
      if( active( box ) )then
         !pressure = ((2d0/3d0)*ektsum+virialsum)*I2J*p2a/(Box_Volume(box)*NA*1d-30)
-        !¤â¤·¤«¤·¤¿¤é°µÎÏ¤¬3ÇÜ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤â¡£
+        !ã‚‚ã—ã‹ã—ãŸã‚‰åœ§åŠ›ãŒ3å€ã«ãªã£ã¦ã„ã‚‹ã‹ã‚‚ã€‚
         pressure = (volumepressure/3d0)*I2J*p2a/(Box_Volume(box)*NA*ANG2M**3)
         !write(STDERR,*) volumepressure, volumepressure/3d0, pressure
         !stop
      else
         !
-        !¥¯¥é¥¹¥¿¤Î°µÎÏ¤Ï·×»»¤Ç¤­¤Ê¤¤¡£½ĞÎÏ¤ÏÂÎÀÑ°µÎÏÀÑ¤ÇÂåÍÑ¤¹¤ë¡£
-        !²¿¤«¼¨ÎÌÊÑ¿ô¤Ç³ä¤ê¤¿¤¤¤Î¤À¤¬¡¢Å¬Åö¤Ê¤â¤Î¤¬»×¤¤¤¢¤¿¤é¤Ê¤¤¡£
+        !ã‚¯ãƒ©ã‚¹ã‚¿ã®åœ§åŠ›ã¯è¨ˆç®—ã§ããªã„ã€‚å‡ºåŠ›ã¯ä½“ç©åœ§åŠ›ç©ã§ä»£ç”¨ã™ã‚‹ã€‚
+        !ä½•ã‹ç¤ºé‡å¤‰æ•°ã§å‰²ã‚ŠãŸã„ã®ã ãŒã€é©å½“ãªã‚‚ã®ãŒæ€ã„ã‚ãŸã‚‰ãªã„ã€‚
         !
         pressure = (volumepressure/3d0)*I2J*p2a
      endif
      !
-     !°µÎÏ¥Æ¥ó¥½¥ëP_{alpha beta}¤Î½Ö´ÖÃÍ¤ò½ĞÎÏ¡£Ã±°Ì¤ÏPa¡£
+     !åœ§åŠ›ãƒ†ãƒ³ã‚½ãƒ«P_{alpha beta}ã®ç¬é–“å€¤ã‚’å‡ºåŠ›ã€‚å˜ä½ã¯Paã€‚
      !See JPCB 104, 1332(2000)
      !
      if ( 0 < ptensor ) then
@@ -2243,7 +2277,7 @@ program main
         endif
      endif
      !
-     !³ÈÄ¥MD
+     !æ‹¡å¼µMD
      !
      if(nose%active) call Nose_Correct(nose,temperature)
      if(an%mode.ne.noandersen)then
@@ -2251,7 +2285,7 @@ program main
         call Andersen_Correct(an,box,pressure)
      endif
      !
-     !²¹ÅÙ¤ò¶¯À©Åª¤ËÀßÄê¤¹¤ë¡£
+     !æ¸©åº¦ã‚’å¼·åˆ¶çš„ã«è¨­å®šã™ã‚‹ã€‚
      !
      if(fVcnt)then
         if(mod(nstep,ivcnt).eq.0)then
@@ -2267,7 +2301,7 @@ program main
         endif
      endif
      !
-     !Á´¥¨¥Í¥ë¥®¡¼¤òºÆÀßÄê¤¹¤ë¡£
+     !å…¨ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’å†è¨­å®šã™ã‚‹ã€‚
      !
      if( hset_freq .ne. 0 )then
         if( mod( nstep, hset_freq ) .eq. 0 )then
@@ -2279,9 +2313,9 @@ program main
            do j=1,ncompo
               hset_ek = hset_ek + ( ekt(j) + ekr(j) )
            enddo
-           ! Á´¥¨¥Í¥ë¥®¡¼¤Ë²Ã¤¨¤ë¤Ù¤­ÎÌ¡£
+           ! å…¨ã‚¨ãƒãƒ«ã‚®ãƒ¼ã«åŠ ãˆã‚‹ã¹ãé‡ã€‚
            hset_param = (hset_value * J2I * KX2X - ( hset_ep + hset_ek ) ) * hset_ratio
-           ! ±¿Æ°¥¨¥Í¥ë¥®¡¼¤Î¥¹¥±¡¼¥ê¥ó¥°
+           ! é‹å‹•ã‚¨ãƒãƒ«ã‚®ãƒ¼ã®ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
            hset_param = ( hset_ek + hset_param ) / hset_ek
            if ( hset_param .lt. 0d0 ) call die( 0, "Negative temperature." )
            do compo=1,ncompo
@@ -2353,8 +2387,8 @@ program main
         if(mod(nstep,mdvw).eq.0)then
            write(LOGFILE,'("@ASTP")')
            write(LOGFILE,*)nstep
-           !MDView¤ÏÄ¾ÊıÂÎ¥»¥ë¤ò¥µ¥İ¡¼¥È¤·¤Æ¤¤¤Ê¤¤¤Î¤Ç¡¢ÊÌ¸Ä¤Ë¾ğÊó¤òÊİ
-           !Â¸¤·¤Æ¤ª¤¯É¬Í×¤¬¤¢¤ë(¤È»×¤¦)Ê¿À®15Ç¯10·î27Æü(·î)
+           !MDViewã¯ç›´æ–¹ä½“ã‚»ãƒ«ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ãªã„ã®ã§ã€åˆ¥å€‹ã«æƒ…å ±ã‚’ä¿
+           !å­˜ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚‹(ã¨æ€ã†)å¹³æˆ15å¹´10æœˆ27æ—¥(æœˆ)
            call save(box,LOGFILE, BOX_BOX3)
            write(LOGFILE,'("@MDVW")')
            call save(box,LOGFILE, BOX_MDVW)
@@ -2372,7 +2406,7 @@ program main
            enddo
         endif
      endif
-     !ÉÔ´°Á´¡£±¿Æ°¤¹¤ëÊ¬»Ò¤·¤«½ĞÎÏ¤µ¤ì¤Ê¤¤¡£
+     !ä¸å®Œå…¨ã€‚é‹å‹•ã™ã‚‹åˆ†å­ã—ã‹å‡ºåŠ›ã•ã‚Œãªã„ã€‚
      if(fAverage)then
         !if(mod(nstep,av%interval).eq.0)then
         !   do i=1,water%nmol
@@ -2395,8 +2429,8 @@ program main
      if(nlog.ne.0)then
         if(mod(nstep,nlog).eq.0)then
            nose_ek=(nose%zeta0**2*nose%q*t%Dt*dof*0.5d0)*RGAS
-           !dz/dt=zeta0¤À¤«¤é¡¢zeta0¤òÂæ·ÁÂ§¤ÇÀÑÊ¬¤¹¤ë¡£(¥·¥ó¥×¥½¥ó¤Ë
-           !¤·¤Æ¤â¤½¤ó¤Ê¤Ë¼ê´Ö¤ÏÊÑ¤ï¤é¤Ê¤¤¤±¤É)
+           !dz/dt=zeta0ã ã‹ã‚‰ã€zeta0ã‚’å°å½¢å‰‡ã§ç©åˆ†ã™ã‚‹ã€‚(ã‚·ãƒ³ãƒ—ã‚½ãƒ³ã«
+           !ã—ã¦ã‚‚ãã‚“ãªã«æ‰‹é–“ã¯å¤‰ã‚ã‚‰ãªã„ã‘ã©)
            nose_ep=(dof*nose%temp*(nose%zetasum-0.5d0*nose%zeta0)*t%Dt)*RGAS
            ! N/m^2 * m^3 * NA 
            andersen_ep = an%pex   * an%v0         * a2p * NA * ANG2M**3
@@ -2408,12 +2442,12 @@ program main
               k = k + mol(j)%nmol
            enddo
            !
-           !º®¹çÊª¤Î¥¨¥Í¥ë¥®¡¼¤ò¡¢Á´Ê¬»Ò¿ô¤Ç³ä¤Ã¤ÆÉ½¼¨¤¹¤ë¤Î¤Ï¤ª¤«¤·¤¤
-           !¤Î¤Ç¡¢ÁíÏÂ¤òÉ½¼¨¤¹¤ë¡£
+           !æ··åˆç‰©ã®ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’ã€å…¨åˆ†å­æ•°ã§å‰²ã£ã¦è¡¨ç¤ºã™ã‚‹ã®ã¯ãŠã‹ã—ã„
+           !ã®ã§ã€ç·å’Œã‚’è¡¨ç¤ºã™ã‚‹ã€‚
            !
 
            !
-           !²ÄÊÑÄ¹¥Ç¡¼¥¿¤ò°ì¹Ô¤Ë½ĞÎÏ¤¹¤ë¤¿¤á¤Î¹©É×¡£
+           !å¯å¤‰é•·ãƒ‡ãƒ¼ã‚¿ã‚’ä¸€è¡Œã«å‡ºåŠ›ã™ã‚‹ãŸã‚ã®å·¥å¤«ã€‚
            !
            call empty( output )
            call push( output, temperature )      !2
@@ -2438,6 +2472,7 @@ program main
 #ifdef SOLVATIONTEST
            call push( output, (epsum + eksum + exsum + ejointhb) * I2J + nose_ep + nose_ek + andersen_ep + andersen_ek )
 #endif
+#ifdef JARZYNSKI
            if ( fJar ) then
               call push( output, epJar * I2J )
               do j=1, ncombi
@@ -2446,16 +2481,17 @@ program main
            endif
            if ( morphcompo .ne. 0 ) then
               mix = ( mixf - mixi ) / dble( nloop )
-              call push( output, dudl * I2J )          !¤³¤ì¤òÊ¿¶Ñ¤¹¤ì¤Ğ<du/dl>_l¤¬ÆÀ¤é¤ì¤ë¡£
-              call push( output, dudlsum * I2J * mix ) !mixi!=mixf¤Î¾ì¹ç¤Î¸¡»»ÍÑ¡£
+              call push( output, dudl * I2J )          !ã“ã‚Œã‚’å¹³å‡ã™ã‚Œã°<du/dl>_lãŒå¾—ã‚‰ã‚Œã‚‹ã€‚
+              call push( output, dudlsum * I2J * mix ) !mixi!=mixfã®å ´åˆã®æ¤œç®—ç”¨ã€‚
            endif
+#endif !JARZYNSKI
            call writetag( LOGFILE, '@LOGD' )
            write(LOGFILE,'(i10,30(1x,E24.17))') nstep, ( output%value(j), j=1, output%depth )
         endif
      endif
 #ifdef MEMUSAGE
      !
-     !ÇÛÎó¤¬°î¤ì¤Ê¤¤¤«¡¢Ãà°ì¥Á¥§¥Ã¥¯¤¹¤ë¡£
+     !é…åˆ—ãŒæº¢ã‚Œãªã„ã‹ã€é€ä¸€ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
      !
      call update( mon(1), g%ndivx )
      call update( mon(2), g%ndivy )
@@ -2487,7 +2523,7 @@ program main
 #endif
      nstep=nstep+1
   enddo
-  !     ·ë²Ì¤Î½ĞÎÏ
+  !     çµæœã®å‡ºåŠ›
 #ifdef USE_REPLICA
   open( TRAJOUT, file=mdreplica%outtraj, action='WRITE', form='UNFORMATTED' )
 #endif
@@ -2505,7 +2541,7 @@ program main
   write(TRAJOUT)"@ASTP"
   write(TRAJOUT)nstep
   if(nose%active)then
-     !ÆâÉôÃ±°Ì¤ØÊÑ´¹Ê¿À®£±£²Ç¯£´·î£¶Æü(ÌÚ)
+     !å†…éƒ¨å˜ä½ã¸å¤‰æ›å¹³æˆï¼‘ï¼’å¹´ï¼”æœˆï¼–æ—¥(æœ¨)
      nose%q=nose%q / t%dt
      call Nose_WriteBinaryNOS2(nose,TRAJOUT)
   endif
@@ -2516,8 +2552,8 @@ program main
   write(TRAJOUT) "@TEST"
   write(TRAJOUT) "@MDLP"
   write(TRAJOUT) nloop
-  !¸ß´¹Ã±°Ì·Ï¤Ë¤â¤É¤¹
-  !ÌÌÅİ¤ò¤µ¤±¤ë¤¿¤á¡¢¤Ç¤­¤ì¤ĞÆâÉôÃ±°Ì¤ò¤¼¤ó¤ÖÊÑ¹¹¤·¤¿Êı¤¬¤è¤¤¡£
+  !äº’æ›å˜ä½ç³»ã«ã‚‚ã©ã™
+  !é¢å€’ã‚’ã•ã‘ã‚‹ãŸã‚ã€ã§ãã‚Œã°å†…éƒ¨å˜ä½ã‚’ãœã‚“ã¶å¤‰æ›´ã—ãŸæ–¹ãŒã‚ˆã„ã€‚
   do compo=1,ncompo
      if ( mol(compo)%isRigid ) then
         call rigid_toExternalUnit( rigid(compo), mol(compo), t )
@@ -2534,16 +2570,20 @@ program main
      call save_binary(tie(compo), TRAJOUT)
   enddo
   !
-  !morph¤Î¾ì¹ç¤Ï¡¢½éºÂÉ¸¤È½ªºÂÉ¸¤Èº®¹çÈæ¤ò½ĞÎÏ¤¹¤Ù¤­¤Ç¤Ï¡©
-  !Ê¿À®16Ç¯10·î8Æü(¶â)
+  !morphã®å ´åˆã¯ã€åˆåº§æ¨™ã¨çµ‚åº§æ¨™ã¨æ··åˆæ¯”ã‚’å‡ºåŠ›ã™ã¹ãã§ã¯ï¼Ÿ
+  !å¹³æˆ16å¹´10æœˆ8æ—¥(é‡‘)
   !
   do compo=1,ncompo
      if ( mol(compo)%isRigid ) then
+#ifdef JARZYNSKI
         if ( rigidmorph%mode .eq. rigidmorph_active .and. morphcompo .eq. compo ) then
            call save_binary(rigidmorph, mol( compo ), TRAJOUT )
         else
            call save_binary(rigid(compo), mol(compo), TRAJOUT, RIGID_WTG2)
         endif
+#else
+        call save_binary(rigid(compo), mol(compo), TRAJOUT, RIGID_WTG2)
+#endif !JARZYNSKI
      else
         call save_binary(flex(compo), mol(compo), site, TRAJOUT, FLEX_APC5)
      endif
@@ -2559,7 +2599,7 @@ program main
   !     Done
   !output for book and grid
   !
-  !ËÜÅö¤ÏÍğ¿ô¤òÊİÂ¸¤¹¤Ù¤­¡£
+  !æœ¬å½“ã¯ä¹±æ•°ã‚’ä¿å­˜ã™ã¹ãã€‚
   !
 #ifdef FAKEMPI
   call fakempi_finalize( ierr )

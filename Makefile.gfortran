@@ -24,7 +24,7 @@ F90CPPFLAGS	=-DSTDERR=0 $(COMMONCPPFLAGS)
 #
 #ifort -O3だとmc2は誤動作する。
 #
-F90FLAGS	= -O3 -ffree-line-length-0
+F90FLAGS	= -g -fbounds-check -ffree-line-length-0
 #F90FLAGS	= -C -d4 -g # -qp #for debug
 FFLAGS		= $(F90FLAGS)
 # -qp: gprof profile

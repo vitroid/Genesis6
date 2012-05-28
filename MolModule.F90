@@ -1,7 +1,7 @@
 ! -*- f90 -*-
 module mol_module
   !
-  !¹äÂÎÊ¬»Ò¡¢½ÀÆğÊ¬»Ò¶¦ÄÌ¤Î¾ğÊó
+  !å‰›ä½“åˆ†å­ã€æŸ”è»Ÿåˆ†å­å…±é€šã®æƒ…å ±
   !
   implicit none
 
@@ -9,27 +9,27 @@ module mol_module
   type sMol
      sequence
      !
-     !1Ê¬»Ò¤Î¼«Í³ÅÙ
+     !1åˆ†å­ã®è‡ªç”±åº¦
      !
      integer :: dof
      !
-     !¥°¥ë¡¼¥×¤ËÂ°¤¹¤ëÊ¬»Ò¤Î¿ô
+     !ã‚°ãƒ«ãƒ¼ãƒ—ã«å±ã™ã‚‹åˆ†å­ã®æ•°
      !
      integer :: nmol
      !
-     !1Ê¬»Ò¤¢¤¿¤ê¤Î¥µ¥¤¥È¿ô
+     !1åˆ†å­ã‚ãŸã‚Šã®ã‚µã‚¤ãƒˆæ•°
      !
      integer :: nsite
      !
-     !offset¤ÏºÇ½é¤ÎÊ¬»Ò·²¤Ï0¡¢
-     !¼¡¤ÎÊ¬»Ò·²¤ÏºÇ½é¤Î·²¤Î¥µ¥¤¥È¿ô¡¢¤È¤¤¤¦É÷¤ËÈÖ¹æ¤òÍ¿¤¨¤ë¡£
+     !offsetã¯æœ€åˆã®åˆ†å­ç¾¤ã¯0ã€
+     !æ¬¡ã®åˆ†å­ç¾¤ã¯æœ€åˆã®ç¾¤ã®ã‚µã‚¤ãƒˆæ•°ã€ã¨ã„ã†é¢¨ã«ç•ªå·ã‚’ä¸ãˆã‚‹ã€‚
      !
      integer :: offset
 #ifdef VPOPTIMIZE
      integer,dimension(MAXSITE*MAXMOL) :: lvsite,lvmol
 #endif
      !
-     !¼±ÊÌ»Ò
+     !è­˜åˆ¥å­
      !
      character(len=256) id
      !
@@ -41,9 +41,9 @@ module mol_module
      !
      logical :: isFixed
      !
-     !¥µ¥¤¥È¤´¤È¤ÎÌ¾Á°
+     !ã‚µã‚¤ãƒˆã”ã¨ã®åå‰
      !
-     character(len=8),pointer :: name(:)
+     character(len=8),pointer :: name(:) => null()
   end type sMol
   logical, parameter :: FIXED = .true.
 
@@ -70,7 +70,7 @@ contains
     !allocate(mol%name(site))
   end subroutine Mol_Constructor
   
-  !     ¥µ¥¤¥È¿ô¤òÁı²Ã¤µ¤»¤ë¤Î¤ß¡£
+  !     ã‚µã‚¤ãƒˆæ•°ã‚’å¢—åŠ ã•ã›ã‚‹ã®ã¿ã€‚
   subroutine Mol_allocate(m,si,nmol,isRigid)
     use site_module
     implicit none
@@ -142,7 +142,7 @@ contains
     integer :: n,site
     n=0
     !
-    !¸¶»ÒÌ¾¤¬¶õÇò¤«¤é»Ï¤Ş¤ë¥µ¥¤¥È¤ÏÉ½¼¨¤·¤Ê¤¤¡£
+    !åŸå­åãŒç©ºç™½ã‹ã‚‰å§‹ã¾ã‚‹ã‚µã‚¤ãƒˆã¯è¡¨ç¤ºã—ãªã„ã€‚
     !
     do site=1,mol%nsite-1
        if ( mol%name(site)(1:1) .ne. " " ) n=n+1

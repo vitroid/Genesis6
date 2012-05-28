@@ -4,63 +4,63 @@ module interaction_module
 #ifdef TEST7
 #define partner_i(x,y) partner_i_(y,x)
 #define partner_j(x,y) partner_j_(y,x)
-  !¤³¤ì¤ÏÆş¤ì¤«¤¨¤¿Êı¤¬Â®¤¯¤Ê¤Ã¤¿¡£
+  !ã“ã‚Œã¯å…¥ã‚Œã‹ãˆãŸæ–¹ãŒé€Ÿããªã£ãŸã€‚
 #endif
 
 !
-  !box_renormalize¤Çvector¤ò¤ä¤á¤ë¡£¾¯¤·¹âÂ®²½¤¹¤ë¤¬¡¢Âçº¹¤Ï¤Ê¤¤¡£
-!undef¤Ç¸ÇÄêÊ¿À®15Ç¯4·î10Æü(ÌÚ)
+  !box_renormalizeã§vectorã‚’ã‚„ã‚ã‚‹ã€‚å°‘ã—é«˜é€ŸåŒ–ã™ã‚‹ãŒã€å¤§å·®ã¯ãªã„ã€‚
+!undefã§å›ºå®šå¹³æˆ15å¹´4æœˆ10æ—¥(æœ¨)
 !
 #undef TEST30
 !
-!inner_product()¤À¤±¤òÇÑ»ß¤·¤ÆÄ¾¤Ë½ñ¤¤¤Æ¤ß¤ë¡£¸ú²Ì¤¢¤ê(¾ÜºÙ¤ÏGenesis5/input512¤Ë)
-!define¤Ç¸ÇÄêÊ¿À®15Ç¯4·î10Æü(ÌÚ)
+!inner_product()ã ã‘ã‚’å»ƒæ­¢ã—ã¦ç›´ã«æ›¸ã„ã¦ã¿ã‚‹ã€‚åŠ¹æœã‚ã‚Š(è©³ç´°ã¯Genesis5/input512ã«)
+!defineã§å›ºå®šå¹³æˆ15å¹´4æœˆ10æ—¥(æœ¨)
 !
 #define TEST31
 
 
 !
-!box_renormalize¤òinlineÅ¸³«¤¹¤ë¡£Ê¿À®15Ç¯11·î22Æü(ÅÚ)
-!¥ï¡¼¥¯¥¹¥Æ¡¼¥·¥ç¥ó¤Ç¤ÏÂ®ÅÙ¤ÏÊÑ¤ï¤é¤Ê¤¤¤¬¡¢¥¹¡¼¥Ñ¡¼¥³¥ó¥Ô¥å¡¼¥¿¡¼¤Ç°ã¤¦¤Ï¤º¤Ê¤Î¤Ç¤È¤ê¤¢¤¨¤ºdefine¤Ë¤·¤Æ¤ª¤¯¡£Ê¿À®15Ç¯11·î22Æü(ÅÚ)
+!box_renormalizeã‚’inlineå±•é–‹ã™ã‚‹ã€‚å¹³æˆ15å¹´11æœˆ22æ—¥(åœŸ)
+!ãƒ¯ãƒ¼ã‚¯ã‚¹ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ã§ã¯é€Ÿåº¦ã¯å¤‰ã‚ã‚‰ãªã„ãŒã€ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã§é•ã†ã¯ãšãªã®ã§ã¨ã‚Šã‚ãˆãšdefineã«ã—ã¦ãŠãã€‚å¹³æˆ15å¹´11æœˆ22æ—¥(åœŸ)
 !
 #define TEST32
 !
-!DEC¤Ç¤Ï¡¢MAXPAIR¤òparameterÊ¸¤ÇÅÏ¤¹¤È¡¢internal error¤ò¤Ò¤­¤ª¤³¤¹¡£
-!¸¶°ø¤ÏÉÔÌÀ¤À¤¬¡¢¤·¤«¤¿¤Ê¤¤¤Î¤Ç¡¢¤³¤³¤ÇºÆÀë¸À¤¹¤ë¡£
+!DECã§ã¯ã€MAXPAIRã‚’parameteræ–‡ã§æ¸¡ã™ã¨ã€internal errorã‚’ã²ããŠã“ã™ã€‚
+!åŸå› ã¯ä¸æ˜ã ãŒã€ã—ã‹ãŸãªã„ã®ã§ã€ã“ã“ã§å†å®£è¨€ã™ã‚‹ã€‚
 !
-!Ê¿À®15Ç¯6·î19Æü(ÌÚ)ºÆ¤Óºï½ü¡£¤â¤¦DEC¤Ç¤Ï¼Â¹Ô¤·¤Ê¤¤¤À¤í¤¦¡£
+!å¹³æˆ15å¹´6æœˆ19æ—¥(æœ¨)å†ã³å‰Šé™¤ã€‚ã‚‚ã†DECã§ã¯å®Ÿè¡Œã—ãªã„ã ã‚ã†ã€‚
 !#define MAXPAIR 1024*1024
   use common_module
   implicit none
   type sInteraction
      !sequence
-     !ÁêÂĞ¥»¥ë¥Ù¥¯¥È¥ë
+     !ç›¸å¯¾ã‚»ãƒ«ãƒ™ã‚¯ãƒˆãƒ«
      real(kind=8),dimension(:),pointer :: ox,oy,oz
-     !Áê¸ßºîÍÑ¤Î·¸¿ô¡£ÄÌ¾ï¤Ï1¡£°Û¼ïÊ¬»Ò´ÖÁê¸ßºîÍÑ¤ò¡¢LBÂ§¤è¤ê¤â¶¯¤á¤¿¤ê¼å¤á¤¿¤ê¤¹¤ë¤Î¤Ë»ÈÍÑ¤¹¤ë¡£º£¤Î¤È¤³¤í¡¢StdInteraction¤ò»È¤¦·×»»¤Ë¤Î¤ßºîÍÑ¤¹¤ë¡£
+     !ç›¸äº’ä½œç”¨ã®ä¿‚æ•°ã€‚é€šå¸¸ã¯1ã€‚ç•°ç¨®åˆ†å­é–“ç›¸äº’ä½œç”¨ã‚’ã€LBå‰‡ã‚ˆã‚Šã‚‚å¼·ã‚ãŸã‚Šå¼±ã‚ãŸã‚Šã™ã‚‹ã®ã«ä½¿ç”¨ã™ã‚‹ã€‚ä»Šã®ã¨ã“ã‚ã€StdInteractionã‚’ä½¿ã†è¨ˆç®—ã«ã®ã¿ä½œç”¨ã™ã‚‹ã€‚
      real(kind=8) :: scale
      
      logical :: isomol
      integer ::  nmol_i,nmol_j
-     !²¾ÂĞÉ½
+     !ä»®å¯¾è¡¨
      integer npair0
      integer,dimension(MAXPAIR) :: pair_i0,pair_j0
-     !ÂĞÉ½
+     !å¯¾è¡¨
      integer :: Npair
      integer,dimension(MAXPAIR) :: pair_i,pair_j
      !
-     !Áê¸ßºîÍÑ¸º¿ê·¸¿ô¡¢ÄÌ¾ï¤Ïeratio=1d0, fratio=0d0¤òÆş¤ì¤Æ¤ª¤¯¡£
+     !ç›¸äº’ä½œç”¨æ¸›è¡°ä¿‚æ•°ã€é€šå¸¸ã¯eratio=1d0, fratio=0d0ã‚’å…¥ã‚Œã¦ãŠãã€‚
      !
      real(kind=8),dimension(MAXPAIR) :: eratio, fratio
-     !¥á¥â¥ê³ÎÊİ¤Î¤¿¤á¤ÎÌÜ°Â
+     !ãƒ¡ãƒ¢ãƒªç¢ºä¿ã®ãŸã‚ã®ç›®å®‰
      integer :: maxpair
      !
-     !partner¤ÎÂå¤ï¤ê¤Ë¡¢neighbors¤òÍøÍÑ¤·¤Æ¤ß¤ë¡£
+     !partnerã®ä»£ã‚ã‚Šã«ã€neighborsã‚’åˆ©ç”¨ã—ã¦ã¿ã‚‹ã€‚
      !
 #ifdef VPOPTIMIZE
-     !Áê¸ßºîÍÑ¤¹¤ëÁê¼ê¤ÎÉ½¤ò¤¢¤é¤«¤¸¤áºîÀ®¤·¤Æ¤ª¤¯¡£
-     !ÎÏ¤ò·×»»¤·¤¿¤¢¤È¡¢½¸·×ÊİÂ¸¤¹¤ëºî¶È¤Ş¤Ç¥Ù¥¯¥È¥ë²½¤¹¤ë¤¿¤á¡£
+     !ç›¸äº’ä½œç”¨ã™ã‚‹ç›¸æ‰‹ã®è¡¨ã‚’ã‚ã‚‰ã‹ã˜ã‚ä½œæˆã—ã¦ãŠãã€‚
+     !åŠ›ã‚’è¨ˆç®—ã—ãŸã‚ã¨ã€é›†è¨ˆä¿å­˜ã™ã‚‹ä½œæ¥­ã¾ã§ãƒ™ã‚¯ãƒˆãƒ«åŒ–ã™ã‚‹ãŸã‚ã€‚
      !partner
-     ! list¤òºîÀ®¤¹¤ëÊıË¡¤Ï¡¢·Ï¤¬¾®¤µ¤¤¾ì¹ç¤Ë¤Ï¤¢¤Ş¤ê¸úÎ¨¤¬¤è¤¯¤Ê¤¤¡£
+     ! listã‚’ä½œæˆã™ã‚‹æ–¹æ³•ã¯ã€ç³»ãŒå°ã•ã„å ´åˆã«ã¯ã‚ã¾ã‚ŠåŠ¹ç‡ãŒã‚ˆããªã„ã€‚
      integer,dimension(MAXMol) :: npartner_i
      integer,dimension(MAXMol) :: npartner_j
 #ifdef TEST7
@@ -74,16 +74,16 @@ module interaction_module
   end type sInteraction
 
 contains
-!ÎÏ¤Î·×»»¤Îsubroutine²½¡£kf90¤ò»È¤¨¤Ğ¤Á¤ã¤ó¤ÈinlineÅ¸³«¤·¤Æ¤¯¤ì¤ë¤Î¤Ç
-!Â®ÅÙ¤ÎÄã²¼¤ÏËÉ¤²¤ë¡£
-!Ê¿À®£±£²Ç¯£µ·î£¹Æü(²Ğ)¥ï¡¼¥¯¥¹¥Æ¡¼¥·¥ç¥ó¤Îkap¥³¥ó¥Ñ¥¤¥é¤ò»È¤ï¤Ê¤¤¤È
-!inlineÅ¸³«¤Ç¤­¤Ê¤¤¤Î¤À¤¬¡¢kap¤ò»È¤¦¤È·ë²Ì¤¬Âç¤­¤¯¤³¤È¤Ê¤Ã¤Æ¤¯¤ë¤è¤¦¤À¡£
-!ÅöÌÌÊİÎ±¤¹¤ë¡£
-!vpp¤Ç¤ÏÅöÁ³¤Ê¤¬¤éÂ®ÅÙ¤ÏÄã²¼¤·¤Ê¤¤¡£
+!åŠ›ã®è¨ˆç®—ã®subroutineåŒ–ã€‚kf90ã‚’ä½¿ãˆã°ã¡ã‚ƒã‚“ã¨inlineå±•é–‹ã—ã¦ãã‚Œã‚‹ã®ã§
+!é€Ÿåº¦ã®ä½ä¸‹ã¯é˜²ã’ã‚‹ã€‚
+!å¹³æˆï¼‘ï¼’å¹´ï¼•æœˆï¼™æ—¥(ç«)ãƒ¯ãƒ¼ã‚¯ã‚¹ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ã®kapã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã‚’ä½¿ã‚ãªã„ã¨
+!inlineå±•é–‹ã§ããªã„ã®ã ãŒã€kapã‚’ä½¿ã†ã¨çµæœãŒå¤§ããã“ã¨ãªã£ã¦ãã‚‹ã‚ˆã†ã ã€‚
+!å½“é¢ä¿ç•™ã™ã‚‹ã€‚
+!vppã§ã¯å½“ç„¶ãªãŒã‚‰é€Ÿåº¦ã¯ä½ä¸‹ã—ãªã„ã€‚
 !#define TEST12
 #undef TEST12
 
-!Ewald¤Î¥³¡¼¥É¤ÏTEST12¤ÎÊı¤Ë¤·¤«ÁŞÆş¤·¤Æ¤¤¤Ê¤¤(¼êÈ´¤­)
+!Ewaldã®ã‚³ãƒ¼ãƒ‰ã¯TEST12ã®æ–¹ã«ã—ã‹æŒ¿å…¥ã—ã¦ã„ãªã„(æ‰‹æŠœã)
 #ifdef EWALD
 #define TEST12
 #endif
@@ -136,7 +136,7 @@ contains
   end subroutine LJ_Force
 #endif /*TEST12*/
   
-  !Register¤ò»ÈÍÑ¤·¤ÆÁê¸ßºîÍÑÉ½¤òºÆ¹½À®¤¹¤ëÁ°¤ËÉ¬¤º¹Ô¤¦É¬Í×¤¬¤¢¤ëºî¶È
+  !Registerã‚’ä½¿ç”¨ã—ã¦ç›¸äº’ä½œç”¨è¡¨ã‚’å†æ§‹æˆã™ã‚‹å‰ã«å¿…ãšè¡Œã†å¿…è¦ãŒã‚ã‚‹ä½œæ¥­
   subroutine Interaction_Reset(in)
     type(sInteraction),intent(INOUT) :: in
     in%npair=0
@@ -145,7 +145,7 @@ contains
     in%maxpartner_j=0
     in%npartner_j(:)=0
     in%npartner_i(:)=0
-    !¤³¤Î½èÍı¤¬°Õ³°¤Ë½Å¤¤¡£É¬Í×ºÇ¾®¸Â¤Î½é´ü²½¤Ë¤¹¤ë¤Ë¤Ï¡©
+    !ã“ã®å‡¦ç†ãŒæ„å¤–ã«é‡ã„ã€‚å¿…è¦æœ€å°é™ã®åˆæœŸåŒ–ã«ã™ã‚‹ã«ã¯ï¼Ÿ
     in%partner_i(:,:)=0
     in%partner_j(:,:)=0
 #endif /*VPOPTIMIZE*/
@@ -168,7 +168,7 @@ contains
        n=iv%nmol_i*iv%nmol_j
     endif
     call Interaction_Reset(iv)
-    !¡Ö²¾¡×¥ê¥¹¥È¥Ù¥¯¥È¥ë¤òÀ¸À®¤·¤Æ¤ª¤¯¡£
+    !ã€Œä»®ã€ãƒªã‚¹ãƒˆãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”Ÿæˆã—ã¦ãŠãã€‚
     k=0
     do i=1,iv%Nmol_i
        if(iv%isomol)then
@@ -178,7 +178,7 @@ contains
        endif
        do j=jmin,iv%Nmol_j
 #if defined(MPI) || defined(PVM)
-          !¼ç¥ë¡¼¥×³°¤Î¼êÂ³¤­¤Ê¤Î¤Ç¤¨¤¨¤«¤²¤ó¤Ë½ñ¤¤¤Æ¤ª¤¯¡£
+          !ä¸»ãƒ«ãƒ¼ãƒ—å¤–ã®æ‰‹ç¶šããªã®ã§ãˆãˆã‹ã’ã‚“ã«æ›¸ã„ã¦ãŠãã€‚
           if ( mod(node,NPROCS) == MYRANK ) then
              k=k+1
              iv%pair_i0(k)=i
@@ -197,7 +197,7 @@ contains
   
   
   subroutine interaction_initialize(iv,nmol_i,nmol_j)
-    type(sInteraction),intent(out) :: iv
+    type(sInteraction),intent(inout) :: iv
     integer,intent(in)             :: nmol_i
     integer,intent(in), optional   :: nmol_j
     iv%scale = 1d0
@@ -210,7 +210,7 @@ contains
        iv%isomol=.true.
        iv%nmol_j = nmol_i
     endif
-    !ÇÛÎó¤Ïlist vector¤Î¥µ¥¤¥º¤¬ºÇ½ªÅª¤Ë·èÄê¤·¤Æ¤«¤é³ÎÊİ¤¹¤ë¡£
+    !é…åˆ—ã¯list vectorã®ã‚µã‚¤ã‚ºãŒæœ€çµ‚çš„ã«æ±ºå®šã—ã¦ã‹ã‚‰ç¢ºä¿ã™ã‚‹ã€‚
     iv%maxpair=0
     if ( associated( iv%ox ) )then
        deallocate( iv%ox )
@@ -223,24 +223,24 @@ contains
   end subroutine interaction_initialize
   
   !
-  ! ÎÏ¤Î·×»»¤Ï¡¢¼Â¤Ïrigid¤âflex¤âÁ´¤¯Æ±°ì¤Ç¹½¤ï¤Ê¤¤¡£TIP4P¤Î¾ì¹ç¤Ê¤é¡¢
-  !     5¥µ¥¤¥È¥â¥Ç¥ë¤Ë¤·¤Æ¤·¤Ş¤¨¤Ğ¤è¤¤¡£    
+  ! åŠ›ã®è¨ˆç®—ã¯ã€å®Ÿã¯rigidã‚‚flexã‚‚å…¨ãåŒä¸€ã§æ§‹ã‚ãªã„ã€‚TIP4Pã®å ´åˆãªã‚‰ã€
+  !     5ã‚µã‚¤ãƒˆãƒ¢ãƒ‡ãƒ«ã«ã—ã¦ã—ã¾ãˆã°ã‚ˆã„ã€‚    
   
-  !     Áê¸ßºîÍÑ¤Îµ­½Ò¤ÏÊ¬»Ò¤Ë¤è¤Ã¤Æ°Û¤Ê¤ê¡¢°ìÈÌ²½¤Ïº¤Æñ¡£
-  !     °ìÈÌÅª¤ÇÃÙ¤¤
-  !     ÆÃ¼ì¤ÇÂ®¤¤
-  !     ¤ÎÎ¾Êı¤òÁª¤Ù¤ë¤è¤¦¤Ë¥×¥í¥°¥é¥à¤òºî¤ë¤Î¤¬¤è¤¤¤È»×¤¦¡£
+  !     ç›¸äº’ä½œç”¨ã®è¨˜è¿°ã¯åˆ†å­ã«ã‚ˆã£ã¦ç•°ãªã‚Šã€ä¸€èˆ¬åŒ–ã¯å›°é›£ã€‚
+  !     ä¸€èˆ¬çš„ã§é…ã„
+  !     ç‰¹æ®Šã§é€Ÿã„
+  !     ã®ä¸¡æ–¹ã‚’é¸ã¹ã‚‹ã‚ˆã†ã«ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ä½œã‚‹ã®ãŒã‚ˆã„ã¨æ€ã†ã€‚
   
-  !     ¤³¤³¤Ç¤Ï¡¢¿å¿åÁê¸ßºîÍÑ¤òÂ®¤µÍ¥Àè¤Çµ­½Ò¤·¤Æ¤ß¤ë¡£
+  !     ã“ã“ã§ã¯ã€æ°´æ°´ç›¸äº’ä½œç”¨ã‚’é€Ÿã•å„ªå…ˆã§è¨˜è¿°ã—ã¦ã¿ã‚‹ã€‚
   
-  !HomoÁê¸ßºîÍÑ¤Î¾ì¹ç¤Ï¡¢ºîÍÑÈ¿ºîÍÑ¤òÆ±¤¸ÊÑ¿ô¤ËÆş¤ì¤ì¤Ğ¤è¤¤¡£
+  !Homoç›¸äº’ä½œç”¨ã®å ´åˆã¯ã€ä½œç”¨åä½œç”¨ã‚’åŒã˜å¤‰æ•°ã«å…¥ã‚Œã‚Œã°ã‚ˆã„ã€‚
   !
   subroutine Interaction_Compress_obsolete(in,box,rr,xi,yi,zi,xj,yj&
        & ,zj,fNoCompression)
     use box_module
     use vector_module
-!Grid_PR3¤ÎGrid_NeighborListHomo¤Î¸åÈ¾¤ò¤½¤Î¤Ş¤Ş¤â¤Ã¤Æ¤­¤¿¡£¤³¤ì¤Ç¤¤¤¤
-!¤Î¤Ê¤é¶¦ÄÌ²½¤·¤è¤¦¡£
+!Grid_PR3ã®Grid_NeighborListHomoã®å¾ŒåŠã‚’ãã®ã¾ã¾ã‚‚ã£ã¦ããŸã€‚ã“ã‚Œã§ã„ã„
+!ã®ãªã‚‰å…±é€šåŒ–ã—ã‚ˆã†ã€‚
     type(sBox),intent(IN) :: box
     type(sInteraction),intent(INOUT) :: in
     logical,intent(in) :: fNoCompression
@@ -265,7 +265,7 @@ contains
 #else
     allocate(cell(in%npair0))
 #endif
-    !elseÊ¸¤Ç0¤Ë¤·¤¿Êı¤¬Â®¤¤¤è¤¦¤À¡£
+    !elseæ–‡ã§0ã«ã—ãŸæ–¹ãŒé€Ÿã„ã‚ˆã†ã ã€‚
     !pair_k(1:npair)=0
 #ifdef VERBOSE
     write(STDERR,*) "Uncompressed vector length:",in%npair0
@@ -282,7 +282,7 @@ contains
        delta%vec(2) = yi(i)-yj(j)
        delta%vec(3) = zi(i)-zj(j)
 #endif
-       !Ê¿À®13Ç¯4·î17Æü(²Ğ)¥µ¥Ö¥ë¡¼¥Á¥ó²½
+       !å¹³æˆ13å¹´4æœˆ17æ—¥(ç«)ã‚µãƒ–ãƒ«ãƒ¼ãƒãƒ³åŒ–
        !     ox(k) = dnint(dx*box%boxxi)*box%boxx
        !     oy(k) = dnint(dy*box%boxyi)*box%boxy
        !     oz(k) = dnint(dz*box%boxzi)*box%boxz
@@ -337,8 +337,8 @@ contains
     deallocate(cell)
 #endif
 #ifdef VPOPTIMIZE
-    !Á°¤«¤é½çÈÖ¤Ë¤Ä¤á¤Æ¤¤¤«¤Ê¤¯¤Æ¤â¹½¤ï¤Ê¤¤¤³¤È¤Ë¤·¤¿¤é¤º¤¤¤Ö¤óÂ®¤¯¤Ç¤­
-    !¤ë¡£
+    !å‰ã‹ã‚‰é †ç•ªã«ã¤ã‚ã¦ã„ã‹ãªãã¦ã‚‚æ§‹ã‚ãªã„ã“ã¨ã«ã—ãŸã‚‰ãšã„ã¶ã‚“é€Ÿãã§ã
+    !ã‚‹ã€‚
     !OCL VECTOR
     if(fNoCompression)then
        do k=1,in%npair
@@ -347,7 +347,7 @@ contains
           in%partner_i(i,j)=k
           in%partner_j(j,i)=k
        enddo
-     !°Ê²¼¤Ï¤³¤³¤Ç½é´ü²½¤¹¤ëÉ¬Í×¤Ï¤Ê¤¤¡£¥ë¡¼¥×¤Î³°¤Ç½é´ü²½¤¹¤ì¤Ğ¤¤¤¤¡£
+     !ä»¥ä¸‹ã¯ã“ã“ã§åˆæœŸåŒ–ã™ã‚‹å¿…è¦ã¯ãªã„ã€‚ãƒ«ãƒ¼ãƒ—ã®å¤–ã§åˆæœŸåŒ–ã™ã‚Œã°ã„ã„ã€‚
        do i=1,in%nmol_i
           in%npartner_i(i)=in%nmol_j
        enddo
@@ -357,13 +357,13 @@ contains
        in%maxpartner_i=in%nmol_j
        in%maxpartner_j=in%nmol_i
     else
-       !Ê¿À®£±£²Ç¯£´·î£²£µÆü(²Ğ)·ë¶É¤³¤ÎÉôÊ¬¤¬ÃÙ¤¤¡£
+       !å¹³æˆï¼‘ï¼’å¹´ï¼”æœˆï¼’ï¼•æ—¥(ç«)çµå±€ã“ã®éƒ¨åˆ†ãŒé…ã„ã€‚
        do k=1,in%npair
           i=in%pair_i(k)
           in%npartner_i(i) = in%npartner_i(i)+1
           in%partner_i(i,in%npartner_i(i)) = k
        enddo
-     !Ê¿À®£±£²Ç¯£´·î£²£µÆü(²Ğ)·ë¶É¤³¤ÎÉôÊ¬¤¬ÃÙ¤¤¡£
+     !å¹³æˆï¼‘ï¼’å¹´ï¼”æœˆï¼’ï¼•æ—¥(ç«)çµå±€ã“ã®éƒ¨åˆ†ãŒé…ã„ã€‚
        do k=1,in%npair
           j=in%pair_j(k)
           in%npartner_j(j) = in%npartner_j(j)+1
@@ -390,22 +390,22 @@ contains
 #endif
   end subroutine Interaction_Compress_obsolete
 
-!Áê¸ßºîÍÑÂĞÉ½¤Î¤¦¤Á¡¢¼Âºİ¤ËÁê¸ßºîÍÑ¤·¤Ê¤¤(¥«¥Ã¥È¥ª¥Õ³°¤Î)ÂĞ¤ò½üµî¤·¡¢
-!Áê¸ßºîÍÑÂĞÉ½¤ò°µ½Ì¤¹¤ë¡£¤³¤ì¤ò¤¹¤ë¤³¤È¤Ç¡¢ºÇ¤â»ş´Ö¤Î¤«¤«¤ëÎÏ·×»»»»Äø
-!¤Î·×»»ÎÌ¤òºï¸º¤¹¤ë¤³¤È¤¬¤Ç¤­¡¢Á´ÂÎ¤ÎÂ®ÅÙ¤¬¸ş¾å¤¹¤ë¡£
+!ç›¸äº’ä½œç”¨å¯¾è¡¨ã®ã†ã¡ã€å®Ÿéš›ã«ç›¸äº’ä½œç”¨ã—ãªã„(ã‚«ãƒƒãƒˆã‚ªãƒ•å¤–ã®)å¯¾ã‚’é™¤å»ã—ã€
+!ç›¸äº’ä½œç”¨å¯¾è¡¨ã‚’åœ§ç¸®ã™ã‚‹ã€‚ã“ã‚Œã‚’ã™ã‚‹ã“ã¨ã§ã€æœ€ã‚‚æ™‚é–“ã®ã‹ã‹ã‚‹åŠ›è¨ˆç®—ç®—ç¨‹
+!ã®è¨ˆç®—é‡ã‚’å‰Šæ¸›ã™ã‚‹ã“ã¨ãŒã§ãã€å…¨ä½“ã®é€Ÿåº¦ãŒå‘ä¸Šã™ã‚‹ã€‚
 !An argument is added.
 !subroutine Interaction_Compress(in,box,rr,xi,yi,zi,xj,yj,zj,fNoCompression)
   subroutine Interaction_Compress2(in,fbox,box,rr,comi,comj,fNoCompression)
     use vector_module
     use box_module
-!Grid_PR3¤ÎGrid_NeighborListHomo¤Î¸åÈ¾¤ò¤½¤Î¤Ş¤Ş¤â¤Ã¤Æ¤­¤¿¡£¤³¤ì¤Ç¤¤¤¤
-!¤Î¤Ê¤é¶¦ÄÌ²½¤·¤è¤¦¡£
+!Grid_PR3ã®Grid_NeighborListHomoã®å¾ŒåŠã‚’ãã®ã¾ã¾ã‚‚ã£ã¦ããŸã€‚ã“ã‚Œã§ã„ã„
+!ã®ãªã‚‰å…±é€šåŒ–ã—ã‚ˆã†ã€‚
     logical,intent(IN) :: fbox
     type(sBox),intent(IN) :: box
     type(sInteraction),intent(INOUT) :: in
     logical,intent(in) :: fNoCompression
     type(vector3),dimension(*),intent(in) :: comi,comj
-    !rr<0¤Î¾ì¹ç(Ìµ¸Â±óÁê¸ßºîÍÑ)¤Ï¾ò·ïÊ¬¤±¤·¤Ê¤¤¡£
+    !rr<0ã®å ´åˆ(ç„¡é™é ç›¸äº’ä½œç”¨)ã¯æ¡ä»¶åˆ†ã‘ã—ãªã„ã€‚
     real(kind=8),intent(in) :: rr
     !integer,dimension(:),allocatable ::   pair_i,pair_j
     integer,dimension(:),allocatable :: pair_k
@@ -426,7 +426,7 @@ contains
 #else
     allocate(cell(in%npair0))
 #endif
-    !elseÊ¸¤Ç0¤Ë¤·¤¿Êı¤¬Â®¤¤¤è¤¦¤À¡£
+    !elseæ–‡ã§0ã«ã—ãŸæ–¹ãŒé€Ÿã„ã‚ˆã†ã ã€‚
     !pair_k(1:npair)=0
 #ifdef VERBOSE
     write(STDERR,*) "Uncompressed vector length:",in%npair0
@@ -541,13 +541,13 @@ contains
 #endif
 #ifdef VPOPTIMIZE
     !
-    !fNoCompression == false¤Î¾ì¹ç¡¢ÂĞÁê¸ßºîÍÑ¤ò³ÊÇ¼¤¹¤ë2¼¡¸µÇÛÎó¤¬Âç
-    !¤­¤¯¤Ê¤ê¤¹¤®¤Ê¤¤¤è¤¦¤Ë¡¢¤¢¤é¤¬¤¸¤á°µ½Ì¤·¤Æ¤ª¤¯¡£512Ê¬»Ò¤ò±Û¤¨¤ë¤è
-    !¤¦¤Ê·Ï¤Ç¤Ï°µ½Ì¤·¤Ê¤¤¤È¥á¥â¥ê¤òÌµÍÑ¤Ë¿©¤¤¤¹¤®¤ë¾å¡¢½¸·×½èÍı¤¬ÃÙ¤¯
-    !¤Ê¤ë¡£(VP¤Î¾ì¹ç)
+    !fNoCompression == falseã®å ´åˆã€å¯¾ç›¸äº’ä½œç”¨ã‚’æ ¼ç´ã™ã‚‹2æ¬¡å…ƒé…åˆ—ãŒå¤§
+    !ãããªã‚Šã™ããªã„ã‚ˆã†ã«ã€ã‚ã‚‰ãŒã˜ã‚åœ§ç¸®ã—ã¦ãŠãã€‚512åˆ†å­ã‚’è¶Šãˆã‚‹ã‚ˆ
+    !ã†ãªç³»ã§ã¯åœ§ç¸®ã—ãªã„ã¨ãƒ¡ãƒ¢ãƒªã‚’ç„¡ç”¨ã«é£Ÿã„ã™ãã‚‹ä¸Šã€é›†è¨ˆå‡¦ç†ãŒé…ã
+    !ãªã‚‹ã€‚(VPã®å ´åˆ)
     !
-    !Á°¤«¤é½çÈÖ¤Ë¤Ä¤á¤Æ¤¤¤«¤Ê¤¯¤Æ¤â¹½¤ï¤Ê¤¤¤³¤È¤Ë¤·¤¿¤é¤º¤¤¤Ö¤óÂ®¤¯¤Ç¤­
-    !¤ë¡£
+    !å‰ã‹ã‚‰é †ç•ªã«ã¤ã‚ã¦ã„ã‹ãªãã¦ã‚‚æ§‹ã‚ãªã„ã“ã¨ã«ã—ãŸã‚‰ãšã„ã¶ã‚“é€Ÿãã§ã
+    !ã‚‹ã€‚
 !OCL VECTOR
     if(fNoCompression)then
        do k=1,in%npair
@@ -556,7 +556,7 @@ contains
           in%partner_i(i,j)=k
           in%partner_j(j,i)=k
        enddo
-     !°Ê²¼¤Ï¤³¤³¤Ç½é´ü²½¤¹¤ëÉ¬Í×¤Ï¤Ê¤¤¡£¥ë¡¼¥×¤Î³°¤Ç½é´ü²½¤¹¤ì¤Ğ¤¤¤¤¡£
+     !ä»¥ä¸‹ã¯ã“ã“ã§åˆæœŸåŒ–ã™ã‚‹å¿…è¦ã¯ãªã„ã€‚ãƒ«ãƒ¼ãƒ—ã®å¤–ã§åˆæœŸåŒ–ã™ã‚Œã°ã„ã„ã€‚
        do i=1,in%nmol_i
           in%npartner_i(i)=in%nmol_j
        enddo
@@ -566,13 +566,13 @@ contains
        in%maxpartner_i=in%nmol_j
        in%maxpartner_j=in%nmol_i
     else
-       !Ê¿À®£±£²Ç¯£´·î£²£µÆü(²Ğ)·ë¶É¤³¤ÎÉôÊ¬¤¬ÃÙ¤¤¡£
+       !å¹³æˆï¼‘ï¼’å¹´ï¼”æœˆï¼’ï¼•æ—¥(ç«)çµå±€ã“ã®éƒ¨åˆ†ãŒé…ã„ã€‚
        do k=1,in%npair
           i=in%pair_i(k)
           in%npartner_i(i) = in%npartner_i(i)+1
           in%partner_i(i,in%npartner_i(i)) = k
        enddo
-       !Ê¿À®£±£²Ç¯£´·î£²£µÆü(²Ğ)·ë¶É¤³¤ÎÉôÊ¬¤¬ÃÙ¤¤¡£
+       !å¹³æˆï¼‘ï¼’å¹´ï¼”æœˆï¼’ï¼•æ—¥(ç«)çµå±€ã“ã®éƒ¨åˆ†ãŒé…ã„ã€‚
        do k=1,in%npair
           j=in%pair_j(k)
           in%npartner_j(j) = in%npartner_j(j)+1
@@ -598,19 +598,19 @@ contains
     endif
 #endif
     !
-    !Áê¸ßºîÍÑ¸º¿ê´Ø¿ô¤Ë¥Ç¥Õ¥©¥ë¥ÈÃÍ¤òÂåÆş¤¹¤ë¡£
+    !ç›¸äº’ä½œç”¨æ¸›è¡°é–¢æ•°ã«ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’ä»£å…¥ã™ã‚‹ã€‚
     !
     in%eratio( 1 : in%npair ) = 1d0
     in%fratio( 1 : in%npair ) = 0d0
   end subroutine Interaction_Compress2
 
-!box¤òoptional¤Ë¤¹¤ë¤¿¤á¤Ë¡¢Compress2¤È¤Ï°ú¿ô¤Î½çÈÖ¤¬Âå¤ï¤Ã¤Æ¤¤¤ë¤³¤È
-!¤ËÃí°Õ
+!boxã‚’optionalã«ã™ã‚‹ãŸã‚ã«ã€Compress2ã¨ã¯å¼•æ•°ã®é †ç•ªãŒä»£ã‚ã£ã¦ã„ã‚‹ã“ã¨
+!ã«æ³¨æ„
   subroutine Interaction_Compress(in,comi,comj,fNoCompression,r,box)
     use vector_module
     use box_module
-!Grid_PR3¤ÎGrid_NeighborListHomo¤Î¸åÈ¾¤ò¤½¤Î¤Ş¤Ş¤â¤Ã¤Æ¤­¤¿¡£¤³¤ì¤Ç¤¤¤¤
-!¤Î¤Ê¤é¶¦ÄÌ²½¤·¤è¤¦¡£
+!Grid_PR3ã®Grid_NeighborListHomoã®å¾ŒåŠã‚’ãã®ã¾ã¾ã‚‚ã£ã¦ããŸã€‚ã“ã‚Œã§ã„ã„
+!ã®ãªã‚‰å…±é€šåŒ–ã—ã‚ˆã†ã€‚
     type(sBox),intent(IN),optional        :: box
     type(sInteraction),intent(INOUT)      :: in
     logical,intent(in)                    :: fNoCompression
@@ -629,8 +629,8 @@ contains
     endif
   end subroutine Interaction_Compress
 
-!Cluster¤Ç¤·¤«»È¤ï¤Ê¤¤¤À¤í¤¦¤«¤é¡¢¤Æ¤­¤È¤¦¤Ë½ñ¤¯¡£ÍÏ±Õ·Ï¤Ç¤ÏÂçÉı¤ËÊÑ¹¹
-!¤¬É¬Í×¡£
+!Clusterã§ã—ã‹ä½¿ã‚ãªã„ã ã‚ã†ã‹ã‚‰ã€ã¦ãã¨ã†ã«æ›¸ãã€‚æº¶æ¶²ç³»ã§ã¯å¤§å¹…ã«å¤‰æ›´
+!ãŒå¿…è¦ã€‚
   function interaction_findisolated(iv,nmol,x,y,z)
     type(sInteraction),intent(in) :: iv
     real(kind=8),intent(in),dimension(*) :: x,y,z
@@ -640,7 +640,7 @@ contains
     integer :: i,j,k
     !integer :: kk
     real(kind=8) :: r(MAXMOL),rmax
-    !VPPÍÑ¤Î¥Ù¥¯¥È¥ë²½À©¸æ¹Ô
+    !VPPç”¨ã®ãƒ™ã‚¯ãƒˆãƒ«åŒ–åˆ¶å¾¡è¡Œ
     !OCL VECTOR,REPEAT(1000000)
     do i=1,nmol
        r(i)=100d0
@@ -677,7 +677,7 @@ contains
   end subroutine Interaction_Show
 
   !
-  !O-Hµ÷Î¥¤Ç¡¢·ë¹ç¤òÈ½Äê¤¹¤ë¡£
+  !O-Hè·é›¢ã§ã€çµåˆã‚’åˆ¤å®šã™ã‚‹ã€‚
   !
   subroutine interaction_hb_by_oh_distance(iv,mi,mj,site,from,which,to)
     use mol_module
@@ -777,8 +777,8 @@ contains
   end subroutine interaction_hb_by_oh_distance
 
   !
-  !graph(WGPH,NGPH)¤ò½ĞÎÏ¤¹¤ë¡£¤³¤ì¤é¤Î¥Õ¥©¡¼¥Ş¥Ã¥È¤Ïº®¹çÊª¤òÁÛÄê¤·¤Æ
-  !¤¤¤Ê¤¤¡£
+  !graph(WGPH,NGPH)ã‚’å‡ºåŠ›ã™ã‚‹ã€‚ã“ã‚Œã‚‰ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã¯æ··åˆç‰©ã‚’æƒ³å®šã—ã¦
+  !ã„ãªã„ã€‚
   !
   subroutine interaction_SaveGraph(iv,mi,site,file,outputtype)
     use mol_module

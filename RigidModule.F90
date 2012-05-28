@@ -1,8 +1,8 @@
 ! -*- f90 -*-
 #undef RIGIDDEBUG1
 !
-!Ê¬»Ò¤ò¹½À®¤¹¤ë¥µ¥¤¥È¤Î¤¦¤Á¡¢ºÇ¸å¤Î¥µ¥¤¥È(ÄÌ¾ï¤Ï½Å¿´)¤ò¡¢¥«¥Ã¥È¥ª¥Õ¤Î
-!´ğ½à¤È¤¹¤ë¡£½ç½ø¤ËÃí°Õ
+!åˆ†å­ã‚’æ§‹æˆã™ã‚‹ã‚µã‚¤ãƒˆã®ã†ã¡ã€æœ€å¾Œã®ã‚µã‚¤ãƒˆ(é€šå¸¸ã¯é‡å¿ƒ)ã‚’ã€ã‚«ãƒƒãƒˆã‚ªãƒ•ã®
+!åŸºæº–ã¨ã™ã‚‹ã€‚é †åºã«æ³¨æ„
 !
 module rigid_module
   use common_module
@@ -83,12 +83,12 @@ contains
   end subroutine rigid_setmatrix
   
   !
-  !¼Âºİ¤Ë¤ÏÎÏ¤ÏÁ´Á³´Ø·¸¤Ê¤¤¡£rigid_setsiteposition¤Ê¤É¤È¤¹¤Ù¤­¡£
+  !å®Ÿéš›ã«ã¯åŠ›ã¯å…¨ç„¶é–¢ä¿‚ãªã„ã€‚rigid_setsitepositionãªã©ã¨ã™ã¹ãã€‚
   !
   subroutine rigid_setsiteposition0(r,m,s)
     use site_module
     type(sRigid),intent(inout) :: r
-    type(sSite),intent(out) :: s
+    type(sSite),intent(inout) :: s
     type(sMol),intent(in) :: m
     integer i,j,k!,k0
 #ifdef VPOPTIMIZE
@@ -146,7 +146,7 @@ contains
   subroutine rigid_setsiteposition(r,m,s)
     use site_module
     type(sRigid),intent(inout) :: r
-    type(sSite),intent(out) :: s
+    type(sSite),intent(inout) :: s
     type(sMol),intent(in) :: m
     call rigid_setmatrix(r,m)
     call rigid_setsiteposition0(r,m,s)
@@ -641,7 +641,7 @@ contains
     integer :: n,i,s
     read(file) n
     !
-    !ËÜÅö¤Ï¤³¤³¤Ç¤ä¤ë¤Ù¤­¤³¤È¤Ç¤Ï¤Ê¤¤¡£programÃæ¤ÇÌÀ¼¨Åª¤Ë³ÎÊİ¤¹¤Ù¤­
+    !æœ¬å½“ã¯ã“ã“ã§ã‚„ã‚‹ã¹ãã“ã¨ã§ã¯ãªã„ã€‚programä¸­ã§æ˜ç¤ºçš„ã«ç¢ºä¿ã™ã¹ã
     !
     call Mol_Allocate(m,si,n,RIGID_MODE)
     call Rigid_Allocate(r,n)
@@ -716,7 +716,7 @@ contains
     integer,intent(IN) :: file
     integer :: n,i
     !
-    !ÆÉ¤ß¤³¤à¤Î¤Ï¤ä¤á¤¿¡£Ê¿À®16Ç¯7·î6Æü(²Ğ)
+    !èª­ã¿ã“ã‚€ã®ã¯ã‚„ã‚ãŸã€‚å¹³æˆ16å¹´7æœˆ6æ—¥(ç«)
     !
     !read(file,*) n
     do i=1,n
@@ -731,7 +731,7 @@ contains
     integer,intent(IN) :: file
     integer :: n,i
     !
-    !ÆÉ¤ß¤³¤à¤Î¤Ï¤ä¤á¤¿¡£Ê¿À®16Ç¯7·î6Æü(²Ğ)
+    !èª­ã¿ã“ã‚€ã®ã¯ã‚„ã‚ãŸã€‚å¹³æˆ16å¹´7æœˆ6æ—¥(ç«)
     !
     !read(file,*) n
     read(file) (r%mol(i)%com%vec(1),r%mol(i)%com%vec(2),r%mol(i)%com%vec(3),r%mol(i)&
@@ -852,8 +852,8 @@ contains
     type(sTime),intent(IN) :: t
     integer,intent(IN) :: file
     !
-    !Â®ÅÙ¤ÎÃ±°Ì¤ÏA/ps
-    !³ÑÂ®ÅÙ¤ÎÃ±°Ì¤Ïrad/ps
+    !é€Ÿåº¦ã®å˜ä½ã¯A/ps
+    !è§’é€Ÿåº¦ã®å˜ä½ã¯rad/ps
     !
     write(file,'(13(e17.10,1x))') r%com%vec(1),r%com%vec(2),r%com%vec(3),&
          r%quat(1)%vec(1),r%quat(1)%vec(2),r%quat(1)%vec(3),r%quat(1)%vec(4)&
@@ -984,7 +984,7 @@ contains
     !velocity distribution is normal distribution (avg=0, var=sig**2
     ! =kT/m)
     !
-    !mt¤òÄ¾ÀÜ¸Æ¤Ö¤Ù¤­¤Ç¤Ï¤Ê¤¤¡£
+    !mtã‚’ç›´æ¥å‘¼ã¶ã¹ãã§ã¯ãªã„ã€‚
     !
     call mtrngv(seed,m%nmol*12)
     call mtrndv(random,m%nmol*12)
@@ -1087,7 +1087,7 @@ contains
     real(kind=8) :: nmol
     nmol=m%nmol
     !
-    !¤¿¤Ö¤ó´Ö°ã¤Ã¤Æ¤¤¤ë¡£³ÑÂ®ÅÙ¤Ï°ìÎ§¤À¤¬Â®ÅÙ¤Ï°ìÎ§¤Ç¤Ï¤Ê¤¤¡£
+    !ãŸã¶ã‚“é–“é•ã£ã¦ã„ã‚‹ã€‚è§’é€Ÿåº¦ã¯ä¸€å¾‹ã ãŒé€Ÿåº¦ã¯ä¸€å¾‹ã§ã¯ãªã„ã€‚
     !
     velx = momentx * t%dt / (nmol*r%mass)
     vely = momenty * t%dt / (nmol*r%mass)
@@ -1172,7 +1172,7 @@ contains
   end subroutine Rigid_ShiftPosition
   !
   ! Get total momenta of the group r 
-  ! moment¤ÎÃÍ¤Ë¤Ïdt¤¬¤«¤«¤Ã¤Æ¤¤¤ë¡£
+  ! momentã®å€¤ã«ã¯dtãŒã‹ã‹ã£ã¦ã„ã‚‹ã€‚
   !
   subroutine Rigid_GetAngularMomenta(r,m,moment)
     type(sRigid), intent(IN)    :: r
@@ -1288,16 +1288,16 @@ subroutine rigid_correct(r,m,t,fNose,nose,fAndersen,andersen)
      extendrz = extendrz + nosecoeff
   endif
   if(fAndersen) then
-     !acoeff¤Ï¾åÅÄËÜ(9.17)¤ÎdV / ( 3 V dt )
+     !acoeffã¯ä¸Šç”°æœ¬(9.17)ã®dV / ( 3 V dt )
      if ( andersen%mode .eq. orz ) then
         acoeff = andersen%v1 / (2d0*andersen%v0)
         extendtz = extendtz + acoeff
      else if ( andersen%mode .eq. orthorhombic ) then
-        ! ¾åÅÄËÜ
+        ! ä¸Šç”°æœ¬
         acoeff = andersen%v1 / (2d0*3d0*andersen%v0)
-        ! ²¬ºêËÜP.115 (7.47)
+        ! å²¡å´æœ¬P.115 (7.47)
         ! %v1 == v-dot dt, %v0 == Volume
-        ! ¤¿¤À¤·¡¢¼¡¤Î·×»»¤Î¤¿¤á¤Ë¤¢¤é¤«¤¸¤á1/2¤¬³İ¤±¤Æ¤¢¤ë¡£
+        ! ãŸã ã—ã€æ¬¡ã®è¨ˆç®—ã®ãŸã‚ã«ã‚ã‚‰ã‹ã˜ã‚1/2ãŒæ›ã‘ã¦ã‚ã‚‹ã€‚
         !acoeff = andersen%v1 / (3d0*andersen%v0)
         extendtx = extendtx + acoeff
         extendty = extendty + acoeff
@@ -1486,7 +1486,7 @@ subroutine rigid_correct(r,m,t,fNose,nose,fAndersen,andersen)
   return
 end subroutine rigid_correct
 
-!¸åÊı¸ß´¹
+!å¾Œæ–¹äº’æ›
   subroutine rigid_correct2(r,m,t,nose,andersen)
     use mol_module
     use andersen_module
@@ -1623,7 +1623,7 @@ end subroutine rigid_correct
     type(sMol),intent(IN) :: m
     integer,intent(IN) :: file
     integer :: n,mol,site,j
-    !¤¢¤é¤«¤¸¤árigid_setsiteposition¤ÇÊ¬»ÒÆâºÂÉ¸¤¬·×»»¤µ¤ì¤Æ¤¤¤ë¤â¤Î¤È¤¹¤ë¡£
+    !ã‚ã‚‰ã‹ã˜ã‚rigid_setsitepositionã§åˆ†å­å†…åº§æ¨™ãŒè¨ˆç®—ã•ã‚Œã¦ã„ã‚‹ã‚‚ã®ã¨ã™ã‚‹ã€‚
     do mol=1, m%nmol
        do site=1, m%nsite-1
           if ( m%name(site)(1:1) .ne. " " ) then

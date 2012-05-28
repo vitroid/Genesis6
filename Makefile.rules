@@ -27,7 +27,7 @@ FakeMPIFtest: FakeMPIFtest.o FakeMPIF.o FakeMPI.o Timer.o
 	$(F90LD) $(F90LDFLAGS) $^ -o $@
 morph: morph.o
 	$(F90LD) $(F90LDFLAGS) $^ -o $@
-OBJ_RIGID=RigidModule.o EPM2CO2Module.o SPCEModule.o FlatFallerTHFModule.o SSPKMethaneModule.o CJTHFModule.o ST2Module.o TIP4PConst.o NvdEModule.o RigidMorph.o SJBenzene.o RigidSetup.o Dumbbell.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o PiWater.o
+OBJ_RIGID=RigidModule.o EPM2CO2Module.o SPCEModule.o FlatFallerTHFModule.o SSPKMethaneModule.o CJTHFModule.o ST2Module.o TIP4PConst.o NvdEModule.o SJBenzene.o RigidSetup.o Dumbbell.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o PiWater.o # RigidMorph.o
 
 mc2: mc2.o RigidModule.o SiteModule.o MolModule.o StdInteraction.o BoxModule.o CutoffModule.o TIP4PModule.o TIP5PModule.o OPLSMeOHModule.o CommonModule.o PhysConst.o VectorModule.o QuatModule.o RandomModule.o mtrnd.o Monitor.o InteractionModule.o Error.o PairInfo.o MatrixModule.o Interaction2.o ST2Module.o NvdEModule.o SWSilicon.o SJBenzene.o Triplet.o Neighbor.o Tetrahedrality.o GridModule.o BookModule.o Stack.o DistribModule.o Set.o mc2util.o  FakeMPIF.o FakeMPI.o Timer.o Triangle.o Umbrella.o Q6Local.o Graph.o Replica.o om.o NvdEModule.o \
 q6.o #q6cache.o q6f.o qlmcache.o dict.o element.o dlist.o #q6.o

@@ -6,9 +6,9 @@ module grid_module
   use error_module
   implicit none
 #define mAddr(g,x,y,z) (((z)*g%ndivy+(y))*g%ndivx+(x)+1)
-!������ʬ
+!共通部分
   
-  !ʬ�ҷ����Ȥ�°��
+  !分子群ごとの属性
   type sAddress
      sequence
      !maximum number of residents in a cell
@@ -21,12 +21,12 @@ module grid_module
   
   type sNeighborCell
      sequence
-     !vector��2�ܤ���ȸ�����������.true.
+     !vectorを2倍すると原点に戻る場合は.true.
      !logical,dimension(MAXNEIBORCELL) :: doublezero
      integer :: n,n0
-     !�ʲ�������ϡ�acl������������ˤΤ�ɬ�ס�
+     !以下の配列は、aclを生成する時にのみ必要。
      integer,dimension(MAXNEIBORCELL) :: x,y,z
-     !vector��2�ܤ���ȸ��������褦�ʥ٥��ȥ���̸Ĥ�ɽ�ˤ��Ƥ�����
+     !vectorを2倍すると原点に戻るようなベクトルは別個に表にしておく。
      integer,dimension(MAXNEIBORCELL) :: x0,y0,z0
 
      !adjacent cell list for each cell
@@ -36,18 +36,18 @@ module grid_module
 
   type sGrid
      sequence
-     !�ºݤΥ�����礭��
+     !実際のセルの大きさ
      type(vector3) :: cell
-     !�׵ᤵ�줿������礭��(Adaptive�ξ��)
+     !要求されたセルの大きさ(Adaptiveの場合)
      type(vector3) :: requested
-     ! ʬ�������⡼�ɤ�����Υ����ꤷ��ʬ�����ưŪ�˷��뤫
+     ! 分割数固定モードか、距離を固定して分割数を動的に決めるか
      integer :: mode
      integer :: ndivx,ndivy,ndivz
-     ! ���ܥ������ɽ��Ʊ�����13�̤ꡢ�ۼ����26�̤ꡣ
+     ! 隣接セルの対表。同種だと13通り、異種だと26通り。
      type(sNeighborCell) :: homo,hetero
   end type sGrid
   integer,parameter :: GRID_NONE=0,GRID_FIX=1,GRID_ADAPTIVE=2
- ! ��̾�����
+ ! 別名の定義
   interface new
      module procedure Grid_Constructor
   end interface
@@ -77,7 +77,7 @@ module grid_module
   end interface
 
 contains
-  !�Ȥꤢ������̣�Τ����ͤ�����Ƥ��������Ȥ��ѹ����Ƥ�褤��
+  !とりあえず意味のある値を入れておく。あとで変更してもよい。
   subroutine Grid_Constructor(g)
     type(sGrid),intent(INOUT) :: g
     g%mode=GRID_NONE
@@ -90,7 +90,7 @@ contains
   end subroutine Grid_Constructor
   
   !
-  !box���Ѳ��˱����ơ�ʬ��λ�����ưŪ���ѹ����롣
+  !boxの変化に応じて、分割の仕方を動的に変更する。
   !
   subroutine Grid_Update( g, box, range )
     use box_module
@@ -187,9 +187,9 @@ contains
     g%requested%vec(1:3) = size
   end subroutine Grid_SetAdaptive
     
-!VOXA�����ξ��ϡ����ܥ��뤬26�Ĥˤʤ�褦�˥���ʬ����Τۤ���Ĵ�᤹
-!�롣���̡�ʬ�����xyz���٤�Ʊ���˸¤�Τǡ�Ω���ΰʳ��Υ����ƥ�Ǥϸ�
-!Ψ���������롣(���ܥ���ɽ����å�����Թ��)
+!VOXA形式の場合は、隣接セルが26個になるようにセル分割数のほうを調節す
+!る。当面、分割数はxyzすべて同じに限るので、立方体以外のシステムでは効
+!率が悪化する。(隣接セル表キャッシュの都合上)
   function Grid_ReadBinaryVOXA(g,file)
     integer,intent(IN) ::file
     type(sGrid),intent(OUT) :: g
@@ -273,9 +273,9 @@ contains
 #endif
   end subroutine Grid_SetCellSize
   
-!���륻������ܤ��륻���ɽ���������롣
-!Homo(geneous)�ʷϤǤϡ�����A���Ф��ƥ���B����ڤܤ��Ϥ�׻�����С���
-!�εդϷ׻����ʤ��Ƥ褤�Τǡ������б�ɽ��Ⱦʬ������������Ф褤��
+!あるセルに隣接するセルの表を生成する。
+!Homo(geneous)な系では、セルAに対してセルBから及ぼす力を計算すれば、そ
+!の逆は計算しなくてよいので、セル対応表も半分だけ準備すればよい。
   subroutine NeighborCell_ListHomo(nc,g,maxradius)
     type(sGrid),intent(IN) :: g
     type(sNeighborCell),intent(OUT) :: nc
@@ -289,20 +289,20 @@ contains
     real(kind=8)  :: ddx,ddy,ddz
     real(kind=8)  :: dix,diy,diz
   !integer :: kk
-  !�ʻҤ��о�����ȤäƷ׻��̤򸺤餽���Ȼפä������ճ����񤷤����Ȥ�
-  !���Τϡ�����������ޤ������Ȥǡ�������a:b��b:a��Ʊ��ˤʤ륱����(a
-  !��b�٥��ȥ��2�ܤ�0�٥��ȥ����Ʊ�ʾ�硣)�����ꡢ���ξ��ˤ�ʬ��
-  !��i,j����ݤ˽�ʣ���򤱤�褦�ʹ��פ�ɬ�פˤʤäƤ��롣���åȥ���
-  !�����륵�������⽽ʬû�����ˤϤ��ޤꤳ�������������Ϲͤ��ʤ���
-  !�褤�Τǡ��ҤȤޤ���䤳�����ʤ����������Ƥ�����2�����ä�®�٤�
-  !��Ӥ��뤫��
+  !格子の対称性を使って計算量を減らそうと思ったが、意外に難しい。とい
+  !うのは、周期境界をまたぐことで、セル対a:bとb:aが同一になるケース(a
+  !→bベクトルの2倍が0ベクトルと相同な場合。)があり、その場合には分子
+  !対i,jを作る際に重複を避けるような工夫が必要になってくる。カットオフ
+  !がセルサイズよりも十分短い場合にはあまりこういうケースは考えなくて
+  !よいので、ひとまずややこしいながらも実装しておく。2種類作って速度を
+  !比較するか。
 
-  !��������Ϥ��ξ�ǳ��ݤ�������������
+  !この配列はその場で確保した方がいい。
     integer,dimension(0:MAXGRIDX-1,0:MAXGRIDY-1,0:MAXGRIDZ-1) :: mark
     !kk=0
     mark(0:g%ndivx-1,0:g%ndivy-1,0:g%ndivz-1)=0
     if(maxradius == 0d0)then
-       !�Ƕ��ܥ���26�Ĥ�̵�����ɲá�
+       !最近接セル26個を無条件に追加。
        nmaxx = 1
        nmaxy = 1
        nmaxz = 1
@@ -493,7 +493,7 @@ contains
     oldx=g%ndivx
     oldy=g%ndivy
     oldz=g%ndivz
-  !ʬ������ڤ�ΤƤǷ׻���
+  !分割数は切り捨てで計算。
     g%ndivx = b%size%vec(1)/g%requested%vec(1)
     g%ndivy = b%size%vec(2)/g%requested%vec(2)
     g%ndivz = b%size%vec(3)/g%requested%vec(3)
@@ -511,7 +511,7 @@ contains
     integer :: jx,jy,jz,c
     integer :: i,nneib
     type(vector3)         :: tmp,ci,delta
-  !����������0�ˤ��Ȥ��ʤ��ȡ����Ȥ����꤬�����롣
+  !これをちゃんと0にしとかないと、あとで問題が生じる。
     a%resident(:,:)=0
     a%nresident(:)=0
     a%nmax=0
@@ -534,7 +534,7 @@ contains
        !write(STDERR,*) i,jx,jy,jz,mAddr(g,jx,jy,jz)
 #endif
     enddo
-    !ʿ������ǯ�������(��)�롼�פ�ʬ�䤷������Ⱦ��vectorize��ǽ��
+    !平成１２年４月１０日(月)ループを分割した。前半はvectorize可能。
     do i=1,n
        c =a%cell(i)
        nneib = a%nresident(c)
@@ -580,7 +580,7 @@ contains
 #endif
     ng=g%ndivx*g%ndivy*g%ndivz
 #ifdef MPI
-    !acl��ɬ�פ��ϰϤ������ʤ���
+    !aclも必要な範囲しか作らない。
     from=(ng*MYRANK)/NPROCS
     to  =(ng*(MYRANK+1))/NPROCS
     ng  = to-from
@@ -589,16 +589,16 @@ contains
     write(STDERR,*) "Number of cells",ng
     write(STDERR,*) "Number of neighbor cells",nc%n
 #endif
-  !���ܤˤ��������ä��߷פ��ʤ�����
-  !�ޤ����ƥ��뤴�ȤΡ�����ʬ�ҤθĿ�nmac_i������롣
-  !storepos�ϡ�����ʬ�ҥꥹ�Ȥ�������������Τ�ɬ�ס�
+  !基本にたちかえって設計しなおす。
+  !まず、各セルごとの、隣接分子の個数nmac_iを数える。
+  !storeposは、隣接分子リストを並列生成するのに必要。
     !safely deallocated inside this routine.
     allocate(nmac_i(ng))
     nmac_i(:) = 0
     do cellpair=1,nc%n
        do i=1,ng
-        !j�λ��Ф��⤷���ԡ��ɤ��㲼������ʤ顢�ե٥��ȥ��acl��ɽ��
-        !��ä��̷׻��ˤ��뤳�Ȥ��ǽ��
+        !jの算出がもしスピードを低下させるなら、逆ベクトルのaclの表を
+        !作って別計算にすることも可能。
           j=nc%cellj((i-1)*nc%n+cellpair)
           nmac_i(i)=nmac_i(i)+aj%nresident(j)
         !write(STDERR,*) cellpair,i,j,nmac_i(i),aj%nresident(j)
@@ -624,10 +624,10 @@ contains
           endif
        enddo
     enddo
-  !�̾���������ʬ�ҥꥹ�Ȥ��Ȥˡ�list vector���������롣
+  !縮小した隣接分子リストをもとに、list vectorを生成する。
     !safely deallocated inside this routine.
     allocate(lvpos(ng))
-  !list vector��ʬ��i¦�ν���Ǻ������롣
+  !list vectorは分子i側の順序で作成する。
     k=0
     do i=1,ng
        lvpos(i)=k
@@ -640,22 +640,22 @@ contains
        call die( 0, "Grid 7" )
     endif
 #endif
-  !ʿ������ǯ�������(��)��ö���뤴�Ȥ�����ʬ��ɽ��������롣����
-  !�ξ��Ϥ��Υꥹ�Ȥ�ʬ�䤹�롣
-  !�����ޤǤν��������󵡤ǤϽ�ʣ���Ƽ¹Ԥ���뤳�Ȥˤʤ롣���ޤ����
-  !��������褦���ȡ����������Υ��åȤϸ��롣
-  !�ܤȤäƤ����н�ʬ��������
+  !平成１２年５月２２日(月)一旦セルごとの隣接分子表を作成する。並列機
+  !の場合はこのリストを分割する。
+  !ここまでの処理は並列機では重複して実行されることになる。あまり時間
+  !がかかるようだと、この方式のメリットは減る。
+  !倍とっておけば十分だろう。
     in%npair0=k
-  !ʿ������ǯ�������(��)����β�¤�Ǥ�����ʬ������ץ�ˤʤä��Τ�
-  !���ϡ���¦��2�ť롼�פ�list vector��������Ƥ�����1�Ų��Ǥ�������
+  !平成１２年５月２２日(月)今回の改造でこの部分がシンプルになったのは
+  !収穫。内側の2重ループはlist vectorを準備しておいて1重化できそう。
     do cell1=1,ng
        p1=lvpos(cell1)
        n1=nmac_i(cell1)
        do ii=1,ai%nresident(cell1+from)
           i=ai%resident(ii,cell1+from)
           j=(ii-1)*n1+p1
-!ʿ������ǯ�������(��)�ʤ�Ǥ���ʤȤ������٤�������ͥ��Ȥ�������
-!�롩�����ϳΤ����٤���2�ť롼�פ�1�ŤˤǤ��ʤ�����
+!平成１２年５月２２日(月)なんでこんなところが遅いんだ？ネストが深すぎ
+!る？ここは確かに遅い。2重ループを1重にできないか？
 !slow 1745,455
 !OCL VECTOR,NOVREC
           do jj=1,nmac_i(cell1)
@@ -666,22 +666,22 @@ contains
     enddo
     !keep neighbormollist()
     deallocate(lvpos)
-    !n0�η���(2�ܤ����0�٥��ȥ�ˤʤ�褦�����Х���٥��ȥ�ξ��)����
-  !�������뤷���ʤ��������褤��ˡ�������������?
-  !���̤ˤϤ��Τ褦�ʥ����ФϾ��ʤ��Ϥ�������ʬ�ҥ�٥����Ӥ�����Ͽ
-  !���뤫�ɤ���Ƚ�Ǥ���ɬ�פ�����Τǡ������֤������ꤦ�롣
+    !n0の系列(2倍すると0ベクトルになるような相対セルベクトルの場合)は別
+  !処理するしかない。これもよい方法があるだろうか?
+  !一般にはこのようなセル対は少ないはずだが、分子ラベルを比較して登録
+  !するかどうか判断する必要があるので、より時間がかかりうる。
 
-  !ʿ������ǯ�������(��)��äȤ�����ʬ���Ǥ���֤Τ������ΰ�ˤʤ�
-  !��(¾����ʬ�ϥ٥��ȥ벽�����ˤ�Ω�ä�)
+  !平成１２年４月２４日(月)やっとこの部分が最も時間のかかる領域になっ
+  !た(他の部分はベクトル化の方針が立った)
 
-  !ʿ������ǯ�������(��)������ʬ�������Ѥˤ���ˤϡ���CPU�ˤǤ���
-  !�����Ѱ�˽�����ʬ������ɬ�פ����롣
-  !nmac_i,neighbormollist������Ѥ��롣
+  !平成１２年５月２２日(月)この部分を並列機用にするには、各CPUにできる
+  !だけ均一に処理を分散する必要がある。
+  !nmac_i,neighbormollistを再利用する。
     nmac_i(:) = 0
     do cellpair=1,nc%n0
        do i=1,ng
-          !j�λ��Ф��⤷���ԡ��ɤ��㲼������ʤ顢�ե٥��ȥ��acl��ɽ��
-          !��ä��̷׻��ˤ��뤳�Ȥ��ǽ��
+          !jの算出がもしスピードを低下させるなら、逆ベクトルのaclの表を
+          !作って別計算にすることも可能。
           j=nc%cell0j((i-1)*nc%n0+cellpair)
           nmac_i(i)=nmac_i(i)+aj%nresident(j)
 #ifdef QUITEVERBOSE
@@ -737,17 +737,17 @@ contains
     
     deallocate(nmac_i)
     in%npair0=k
-  !�ʾ��list vector���ޤ��Ǥ��������ݴɾ��ɽ�������������ˡ��е�Υ��
-  !¬�ꤷ�ơ������Ǥ����롣��������vectorize�Ǥ���Ϥ���
+  !以上でlist vectorがまずできた。力保管場所表を生成する前に、対距離を
+  !測定して、遠い要素を除去する。この操作はvectorizeできるはず。
 
-  !�û������Ȥ���ʤ��Ȥ��ޤ�vector���Ǥ��ʤ��Τ��⤷��ʤ���
-  !ʿ������ǯ�������(��)�����Ȼ������ˤ����ơ�newk�ν���ͤ�1�ˤ���
-  !��segmentation fault����Τ������ϤΥХ��Τ褦�ʵ������롣
-  !ʿ������ǯ�������(��)����ȯ����newk�κǽ��ͤ�pair�θĿ�+1�ˤʤ�
-  !�Ƥ���Τ�1�����ʤ���Ф����ʤ���
+  !加算があとじゃないとうまくvector化できないのかもしれない。
+  !平成１２年４月２５日(火)収集拡散方式において、newkの初期値を1にする
+  !とsegmentation faultするのは翻訳系のバグのような気がする。
+  !平成１２年４月２５日(火)原因発見。newkの最終値はpairの個数+1になっ
+  !ているので1引かなければいけない。
   !newk=0
-  !�����Ȼ��η׻��ϡ�����ñ���������Ф��Ƥ����Ԥ��ʤ��褦�ʵ��ۤ���
-  !�롣�����ǡ�����ˤ��碌�ƥ����ɤ��롣
+  !収集拡散の計算は、ある単一の配列に対してしか行えないような気配があ
+  !る。そこで、それにあわせてコードする。
     return
   end subroutine Grid_NeighborList
 
@@ -772,7 +772,7 @@ contains
     integer,intent(IN) :: NPROCS,MYRANK
 #endif
     if(maxradius == 0d0)then
-       !�Ƕ��ܥ���26�Ĥ�̵�����ɲá�
+       !最近接セル26個を無条件に追加。
        nmaxx = 1
        nmaxy = 1
        nmaxz = 1
