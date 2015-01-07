@@ -1,7 +1,7 @@
 ! -*- f90 -*-
 
 !
-!THF$B$N9=B$$HAj8_:nMQ!#(BPlathe$B$N%Q%i%a!<%?$K$h$k(B13$B%5%$%H%b%G%k(B
+!THFの構造と相互作用。Platheのパラメータによる13サイトモデル
 !(so called Faller model)
 !ID is FLATFTHF
 !
@@ -33,7 +33,7 @@ module flatfthf_module
 
 contains
   !
-  !StdInteraction$B$r;H$&>l9g$N=i4|2=(B
+  !StdInteractionを使う場合の初期化
   !
   subroutine flatfthf_setinteraction(si)
     use standard_interaction_module
@@ -281,8 +281,8 @@ end module flatfthf_module
 !
 !Last modified: Fri Nov 10 08:35:42 MET 2000 
 
-!$BJ?LL9dBNJ,;R$K$9$k$?$a$K(B
-!$BFb3Q$NOB$,(B540$BEY$KB-$j$J$$!#(B
+!平面剛体分子にするために
+!内角の和が540度に足りない。
 !111.2 + 106.1*2 + 101.4*2 = 526.2 = 540 - 2.76*5
 !
-!$B$=$3$GFb3Q$r$9$3$7Bg$-$/$9$k!#(B
+!そこで内角をすこし大きくする。

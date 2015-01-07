@@ -1,7 +1,7 @@
 ! -*- f90 -*-
 
 !
-!THF$B$N9=B$$HAj8_:nMQ!#(BChandrasekhar/Jorgensen$B$N%Q%i%a!<%?$K$h$k(B5$B%5%$%H%b%G%k(B
+!THFの構造と相互作用。Chandrasekhar/Jorgensenのパラメータによる5サイトモデル
 !(so called CJ Flat model)
 !ID is CJTHF___
 !JCP77,5073(1982), JACS 103, 3976(1981)
@@ -28,17 +28,19 @@ module cjthf_module
   real(kind=8),private,parameter :: CO    = 1.411
   real(kind=8),private,parameter :: CC    = 1.529
   integer, parameter             :: UATHFSITE = 6
-  ! United-Atom -- $B:G8e$N%5%$%H$O=E?4!"L>A0$O6uGr$K$7$F$*$/!#(B
+  ! United-Atom -- 最後のサイトは重心、名前は空白にしておく。
   character(len=8),parameter     :: uathfName(UATHFSITE) = (/"O ", "Ca", "Cb", "Cb", "Ca", "  "/)
   real(kind=8),private,parameter :: mass(UATHFSITE) = (/MASSO, MASSC+2*MASSH, MASSC+2*MASSH, MASSC+2*MASSH, MASSC+2*MASSH, 0d0/)
 
 contains
   !
-  !StdInteraction$B$r;H$&>l9g$N=i4|2=(B
+  !StdInteractionを使う場合の初期化
   !
   subroutine cjthf_setinteraction(si)
     use standard_interaction_module
     type(sStdInt),intent(inout) :: si
+    integer :: i
+
     call si_allocate(si, UATHFSITE, LJ_COULOMB)
     !charges [Q]
     si%param(1,1) = QO
@@ -61,6 +63,9 @@ contains
     si%param(3,4) = SIGC
     si%param(3,5) = SIGC
     si%param(3,6) = 0d0
+    do i=1,uathfsite -1
+        write(6,*) si%param(2,i), si%param(3,i), si%param(1,i)
+    enddo
   end subroutine cjthf_setinteraction
 
   subroutine Rigid_CJTHF_Constructor(r)
@@ -92,7 +97,7 @@ contains
     r%molz(4)  = 0d0
 
     !write(6,*) r%molx(3)-r%molx(4)
-    !result: 1.52906 $BJ?@.(B16$BG/(B2$B7n(B4$BF|(B($B?e(B)
+    !result: 1.52906 平成16年2月4日(水)
 
     comx = 0d0
     comy = 0d0
@@ -144,10 +149,13 @@ contains
     !write(6,*) sqrt( ( r%molx(5) - r%molx(8) )**2 + ( r%moly(5) - r%moly(8) )**2 + ( r%molz(5) - r%molz(8) )**2 )
     !write(6,*) sqrt( ( r%molx(5) - r%molx(2) )**2 + ( r%moly(5) - r%moly(2) )**2 + ( r%molz(5) - r%molz(2) )**2 )
     !write(6,*) sqrt( ( r%molx(1) - r%molx(2) )**2 + ( r%moly(1) - r%moly(2) )**2 + ( r%molz(1) - r%molz(2) )**2 )
-    !do i=1,14
-    !   write(6,10) "t", r%molx(i), r%moly(i), r%molz(i), i
-    !enddo
-    !10format(a1,1x,3(f12.5),i5)
+    write(6,"('@DEFR')")
+    write(6,"('CJTHF___')")
+    write(6,*) uathfsite - 1
+    do i=1,5
+       write(6,10) r%molx(i), r%moly(i), r%molz(i), mass(i), uathfname(i)
+    enddo
+ 10 format(a1,1x,3(f12.5),i5)
     !stop
   end subroutine Rigid_CJTHF_Constructor
 
